@@ -381,7 +381,7 @@ export const ChartsSection: React.FC<ChartsSectionProps> = ({
     responsive: true,
     maintainAspectRatio: false,
     layout: {
-      padding: { right: 5, left: 5, top: 8, bottom: 5 },
+      padding: { right: 28, left: 6, top: 8, bottom: 6 },
     },
     interaction: {
       mode: 'index',
@@ -762,7 +762,7 @@ export const ChartsSection: React.FC<ChartsSectionProps> = ({
     responsive: true,
     maintainAspectRatio: false,
     layout: {
-      padding: { right: 8, left: 5, top: 8, bottom: 5 },
+      padding: { right: 28, left: 6, top: 8, bottom: 6 },
     },
     interaction: {
       mode: 'index',
@@ -907,7 +907,7 @@ export const ChartsSection: React.FC<ChartsSectionProps> = ({
     responsive: true,
     maintainAspectRatio: false,
     layout: {
-      padding: { right: 8, left: 5, top: 8, bottom: 5 },
+      padding: { right: 28, left: 6, top: 8, bottom: 6 },
     },
     interaction: {
       mode: 'index',
@@ -1069,7 +1069,7 @@ export const ChartsSection: React.FC<ChartsSectionProps> = ({
       <div
         className={`p-2 sm:p-2.5 relative flex-1 ${
           compact
-            ? 'min-h-[350px] h-[390px] print:min-h-[310px] print:h-[310px] print:max-h-[310px] print:p-1'
+            ? 'min-h-[350px] h-[390px] print:min-h-[260px] print:h-[260px] print:max-h-[260px] print:p-1'
             : 'min-h-[460px] h-full flex-1'
         }`}
       >

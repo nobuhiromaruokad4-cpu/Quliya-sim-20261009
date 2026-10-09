@@ -210,9 +210,9 @@ export default function App() {
             />
 
             {/* 中下段: 3方式比較グラフ（左側 約2/3・8/12） ＋ メカニズム＆お問い合わせ窓口（右側 約1/3・4/12） */}
-            <div className="w-full grid grid-cols-1 md:grid-cols-12 gap-2.5 items-stretch page-break-inside-avoid print:grid-cols-12 print:gap-2.5">
+            <div className="w-full grid grid-cols-1 md:grid-cols-12 gap-2.5 items-stretch page-break-inside-avoid print:grid-cols-12 print:gap-2">
               {/* 左側 (約2/3・8/12): 3方式冷却スピード比較グラフ */}
-              <div className="w-full md:col-span-8 flex flex-col bg-white rounded-xl border border-slate-200 shadow-xs overflow-hidden print:col-span-8 print:rounded-lg print:border-slate-300">
+              <div className="w-full md:col-span-8 flex flex-col bg-white rounded-xl border border-slate-200 shadow-xs overflow-hidden print:col-span-8 print:rounded-lg print:border-slate-300 print:overflow-visible">
                 <div className="bg-slate-50 px-3 py-1.5 border-b border-slate-200 flex items-center justify-between print:px-2.5 print:py-1">
                   <div className="flex items-center space-x-1.5">
                     <span className="w-2 h-2 rounded-full bg-cyan-600"></span>

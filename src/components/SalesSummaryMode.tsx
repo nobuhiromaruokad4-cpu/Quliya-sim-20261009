@@ -294,10 +294,7 @@ export const SalesSummaryMode: React.FC<SalesSummaryModeProps> = ({
               <div>
                 <div className="flex items-center justify-between">
                   <span className="text-[11px] font-black text-emerald-900 flex items-center gap-1 print:text-[10px]">
-                    月間の実質メリット（純手残り）
-                  </span>
-                  <span className="text-[9px] font-bold text-emerald-800 bg-emerald-200/80 px-1 py-0.2 rounded font-sans print:text-[8.5px]">
-                    実質利益
+                    月間メリット
                   </span>
                 </div>
                 {/* 試算結果の数字を字下げ(pl-2)し、文字を大きく目立たせる */}
@@ -306,13 +303,9 @@ export const SalesSummaryMode: React.FC<SalesSummaryModeProps> = ({
                   <span className="text-xs sm:text-sm font-bold ml-1 text-emerald-950 font-sans print:text-[11px]">円/月</span>
                 </div>
               </div>
-              <div className="mt-1 text-[10px] text-emerald-900 border-t border-emerald-300/80 pt-0.5 space-y-0.5 print:text-[9px] print:pt-0.5">
-                <div className="flex items-center justify-between font-mono">
-                  <span>月レンタル料控除後:</span>
-                  <span className="font-bold text-slate-700">▲{monthlyRentalYen.toLocaleString()}円</span>
-                </div>
-                <div className="text-[9.5px] text-emerald-800 font-bold print:text-[8.5px]">
-                  {netSavingsMonth >= 0 ? '※月額レンタル料を上回るコスト削減効果' : '※作業時間短縮および衛生管理改善に貢献'}
+              <div className="mt-1 text-[10px] text-emerald-900 border-t border-emerald-300/80 pt-0.5 print:text-[9px] print:pt-0.5">
+                <div className="text-[9.5px] text-emerald-800 font-bold print:text-[8.5px] leading-tight text-center sm:text-left">
+                  水道削減効果＋人件費削減効果ーレンタル費
                 </div>
               </div>
             </div>
