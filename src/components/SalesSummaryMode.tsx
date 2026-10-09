@@ -218,8 +218,9 @@ export const SalesSummaryMode: React.FC<SalesSummaryModeProps> = ({
         <div>
           <div className="flex items-center justify-between pb-1.5 border-b border-slate-100 mb-1.5 print:mb-1">
             <div className="flex items-center space-x-1.5">
-              <DollarSign className="w-4 h-4 text-emerald-600 print:w-3.5 print:h-3.5" />
-              <h3 className="font-black text-sm text-slate-900 print:text-xs">
+              <DollarSign className="w-5 h-5 text-emerald-600 print:w-4 print:h-4 shrink-0" />
+              {/* タイトルの文字サイズを揃えて大きく変更 */}
+              <h3 className="font-black text-base sm:text-lg text-slate-900 print:text-sm">
                 月あたりのコスト削減シミュレーション（月額レンタル対比）
               </h3>
             </div>
@@ -254,9 +255,10 @@ export const SalesSummaryMode: React.FC<SalesSummaryModeProps> = ({
                 <span className="text-[11px] font-bold text-cyan-800 print:text-[10px]">
                   水道料金の削減額
                 </span>
-                <div className="mt-0.5 text-xl sm:text-2xl font-black text-cyan-900 font-mono print:text-lg">
+                {/* 試算結果の数字を字下げ(pl-2)し、文字を大きく目立たせる */}
+                <div className="mt-1 pl-2 text-2xl sm:text-3xl font-black text-cyan-900 font-mono print:text-xl">
                   ▲{waterSavingsMonth.toLocaleString()}
-                  <span className="text-xs font-bold ml-0.5 text-cyan-700 print:text-[10px]">円/月</span>
+                  <span className="text-xs sm:text-sm font-bold ml-1 text-cyan-700 print:text-[11px]">円/月</span>
                 </div>
               </div>
               <div className="mt-1 text-[10px] text-cyan-700 border-t border-cyan-200/80 pt-0.5 flex items-center justify-between print:text-[9px] print:pt-0.5">
@@ -273,9 +275,10 @@ export const SalesSummaryMode: React.FC<SalesSummaryModeProps> = ({
                 <span className="text-[11px] font-bold text-amber-800 print:text-[10px]">
                   冷却拘束時間の削減
                 </span>
-                <div className="mt-0.5 text-xl sm:text-2xl font-black text-amber-900 font-mono print:text-lg">
+                {/* 試算結果の数字を字下げ(pl-2)し、文字を大きく目立たせる */}
+                <div className="mt-1 pl-2 text-2xl sm:text-3xl font-black text-amber-900 font-mono print:text-xl">
                   ▲{timeSavingsHoursMonth.toFixed(1)}
-                  <span className="text-xs font-bold ml-0.5 text-amber-700 print:text-[10px]">時間/月</span>
+                  <span className="text-xs sm:text-sm font-bold ml-1 text-amber-700 print:text-[11px]">時間/月</span>
                 </div>
               </div>
               <div className="mt-1 text-[10px] text-amber-700 border-t border-amber-200/80 pt-0.5 flex items-center justify-between print:text-[9px] print:pt-0.5">
@@ -297,9 +300,10 @@ export const SalesSummaryMode: React.FC<SalesSummaryModeProps> = ({
                     実質利益
                   </span>
                 </div>
-                <div className="mt-0.5 text-xl sm:text-2xl font-black text-emerald-800 font-mono tracking-tight flex items-baseline print:text-lg">
+                {/* 試算結果の数字を字下げ(pl-2)し、文字を大きく目立たせる */}
+                <div className="mt-1 pl-2 text-2xl sm:text-3xl font-black text-emerald-800 font-mono tracking-tight flex items-baseline print:text-xl">
                   {netSavingsMonth >= 0 ? `+${netSavingsMonth.toLocaleString()}` : `${netSavingsMonth.toLocaleString()}`}
-                  <span className="text-xs font-bold ml-1 text-emerald-950 font-sans print:text-[10px]">円/月</span>
+                  <span className="text-xs sm:text-sm font-bold ml-1 text-emerald-950 font-sans print:text-[11px]">円/月</span>
                 </div>
               </div>
               <div className="mt-1 text-[10px] text-emerald-900 border-t border-emerald-300/80 pt-0.5 space-y-0.5 print:text-[9px] print:pt-0.5">
@@ -435,8 +439,9 @@ export const SalesSummaryMode: React.FC<SalesSummaryModeProps> = ({
       <div className="bg-white rounded-xl p-3 sm:p-3.5 border border-slate-200 shadow-xs page-break-inside-avoid print:p-2 print:rounded-lg">
         <div className="flex items-center justify-between pb-1.5 border-b border-slate-100 mb-1.5 print:mb-1">
           <div className="flex items-center space-x-1.5">
-            <Timer className="w-4 h-4 text-blue-600 print:w-3.5 print:h-3.5" />
-            <h3 className="font-black text-sm text-slate-900 print:text-xs">
+            <Timer className="w-5 h-5 text-blue-600 print:w-4 print:h-4 shrink-0" />
+            {/* タイトルの文字サイズを揃えて大きく変更 */}
+            <h3 className="font-black text-base sm:text-lg text-slate-900 print:text-sm">
               1回あたりの冷却スピード＆コスト対比
             </h3>
           </div>
@@ -594,13 +599,13 @@ export const SalesSummaryMode: React.FC<SalesSummaryModeProps> = ({
                 <span className="whitespace-nowrap">1回あたり水道代:</span>
                 <span className="font-bold text-slate-800 whitespace-nowrap">{sinkCostPerBatch.toLocaleString()} 円</span>
               </div>
-              {/* 基準表示 */}
+              {/* 基準表示（下の空白行を詰める調整） */}
               <div className="flex items-center justify-between text-slate-600 font-bold bg-slate-100 px-1 py-0.5 rounded border border-slate-200 print:text-[8.5px] print:py-0.2">
                 <span className="shrink-0 whitespace-nowrap text-slate-700">1回削減:</span>
                 <span className="whitespace-nowrap">- (従来の基準方式)</span>
               </div>
 
-              {/* 衛生・運用上の留意点 */}
+              {/* 衛生・運用上の留意点 (不要な余白をカット) */}
               <div className="mt-0.5 pt-0.5 border-t border-slate-200 text-[9.5px] font-sans leading-tight print:text-[8.5px]">
                 <span className="font-bold text-slate-700 whitespace-nowrap">衛生・運用の留意点</span>
                 <p className="text-[9px] text-slate-500 leading-tight mt-0.5 print:text-[8px]">
