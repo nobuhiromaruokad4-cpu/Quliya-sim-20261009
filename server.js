@@ -1290,8 +1290,8 @@ var require_node = __commonJS({
           }
           break;
         case "FILE":
-          var fs2 = __require("fs");
-          stream2 = new fs2.SyncWriteStream(fd2, { autoClose: false });
+          var fs = __require("fs");
+          stream2 = new fs.SyncWriteStream(fd2, { autoClose: false });
           stream2._type = "fs";
           break;
         case "PIPE":
@@ -14078,11 +14078,11 @@ var require_mime_types = __commonJS({
       }
       return exts[0];
     }
-    function lookup(path2) {
-      if (!path2 || typeof path2 !== "string") {
+    function lookup(path) {
+      if (!path || typeof path !== "string") {
         return false;
       }
-      var extension2 = extname("x." + path2).toLowerCase().substr(1);
+      var extension2 = extname("x." + path).toLowerCase().substr(1);
       if (!extension2) {
         return false;
       }
@@ -17695,7 +17695,7 @@ var require_path_to_regexp = __commonJS({
   "node_modules/path-to-regexp/index.js"(exports, module) {
     module.exports = pathToRegexp;
     var MATCHING_GROUP_REGEXP = /\\.|\((?:\?<(.*?)>)?(?!\?)/g;
-    function pathToRegexp(path2, keys, options) {
+    function pathToRegexp(path, keys, options) {
       options = options || {};
       keys = keys || [];
       var strict = options.strict;
@@ -17709,8 +17709,8 @@ var require_path_to_regexp = __commonJS({
       var pos = 0;
       var backtrack = "";
       var m;
-      if (path2 instanceof RegExp) {
-        while (m = MATCHING_GROUP_REGEXP.exec(path2.source)) {
+      if (path instanceof RegExp) {
+        while (m = MATCHING_GROUP_REGEXP.exec(path.source)) {
           if (m[0][0] === "\\") continue;
           keys.push({
             name: m[1] || name++,
@@ -17718,18 +17718,18 @@ var require_path_to_regexp = __commonJS({
             offset: m.index
           });
         }
-        return path2;
+        return path;
       }
-      if (Array.isArray(path2)) {
-        path2 = path2.map(function(value) {
+      if (Array.isArray(path)) {
+        path = path.map(function(value) {
           return pathToRegexp(value, keys, options).source;
         });
-        return new RegExp(path2.join("|"), flags);
+        return new RegExp(path.join("|"), flags);
       }
-      if (typeof path2 !== "string") {
+      if (typeof path !== "string") {
         throw new TypeError("path must be a string, array of strings, or regular expression");
       }
-      path2 = path2.replace(
+      path = path.replace(
         /\\.|(\/)?(\.)?:(\w+)(\(.*?\))?(\*)?(\?)?|[.*]|\/\(/g,
         function(match, slash, format, key, capture, star, optional, offset) {
           if (match[0] === "\\") {
@@ -17746,7 +17746,7 @@ var require_path_to_regexp = __commonJS({
           if (slash || format) {
             backtrack = "";
           } else {
-            backtrack += path2.slice(pos, offset);
+            backtrack += path.slice(pos, offset);
           }
           pos = offset + match.length;
           if (match === "*") {
@@ -17776,7 +17776,7 @@ var require_path_to_regexp = __commonJS({
           return result;
         }
       );
-      while (m = MATCHING_GROUP_REGEXP.exec(path2)) {
+      while (m = MATCHING_GROUP_REGEXP.exec(path)) {
         if (m[0][0] === "\\") continue;
         if (keysOffset + i === keys.length || keys[keysOffset + i].offset > m.index) {
           keys.splice(keysOffset + i, 0, {
@@ -17788,13 +17788,13 @@ var require_path_to_regexp = __commonJS({
         }
         i++;
       }
-      path2 += strict ? "" : path2[path2.length - 1] === "/" ? "?" : "/?";
+      path += strict ? "" : path[path.length - 1] === "/" ? "?" : "/?";
       if (end) {
-        path2 += "$";
-      } else if (path2[path2.length - 1] !== "/") {
-        path2 += lookahead ? "(?=/|$)" : "(?:/|$)";
+        path += "$";
+      } else if (path[path.length - 1] !== "/") {
+        path += lookahead ? "(?=/|$)" : "(?:/|$)";
       }
-      return new RegExp("^" + path2, flags);
+      return new RegExp("^" + path, flags);
     }
   }
 });
@@ -17807,19 +17807,19 @@ var require_layer = __commonJS({
     var debug = require_src()("express:router:layer");
     var hasOwnProperty = Object.prototype.hasOwnProperty;
     module.exports = Layer;
-    function Layer(path2, options, fn) {
+    function Layer(path, options, fn) {
       if (!(this instanceof Layer)) {
-        return new Layer(path2, options, fn);
+        return new Layer(path, options, fn);
       }
-      debug("new %o", path2);
+      debug("new %o", path);
       var opts = options || {};
       this.handle = fn;
       this.name = fn.name || "<anonymous>";
       this.params = void 0;
       this.path = void 0;
-      this.regexp = pathRegexp(path2, this.keys = [], opts);
-      this.regexp.fast_star = path2 === "*";
-      this.regexp.fast_slash = path2 === "/" && opts.end === false;
+      this.regexp = pathRegexp(path, this.keys = [], opts);
+      this.regexp.fast_star = path === "*";
+      this.regexp.fast_slash = path === "/" && opts.end === false;
     }
     Layer.prototype.handle_error = function handle_error(error, req, res, next) {
       var fn = this.handle;
@@ -17843,20 +17843,20 @@ var require_layer = __commonJS({
         next(err);
       }
     };
-    Layer.prototype.match = function match(path2) {
+    Layer.prototype.match = function match(path) {
       var match2;
-      if (path2 != null) {
+      if (path != null) {
         if (this.regexp.fast_slash) {
           this.params = {};
           this.path = "";
           return true;
         }
         if (this.regexp.fast_star) {
-          this.params = { "0": decode_param(path2) };
-          this.path = path2;
+          this.params = { "0": decode_param(path) };
+          this.path = path;
           return true;
         }
-        match2 = this.regexp.exec(path2);
+        match2 = this.regexp.exec(path);
       }
       if (!match2) {
         this.params = void 0;
@@ -17949,10 +17949,10 @@ var require_route = __commonJS({
     var slice = Array.prototype.slice;
     var toString = Object.prototype.toString;
     module.exports = Route;
-    function Route(path2) {
-      this.path = path2;
+    function Route(path) {
+      this.path = path;
       this.stack = [];
-      debug("new %o", path2);
+      debug("new %o", path);
       this.methods = {};
     }
     Route.prototype._handles_method = function _handles_method(method) {
@@ -18164,8 +18164,8 @@ var require_router = __commonJS({
         if (++sync > 100) {
           return setImmediate(next, err);
         }
-        var path2 = getPathname(req);
-        if (path2 == null) {
+        var path = getPathname(req);
+        if (path == null) {
           return done(layerError);
         }
         var layer;
@@ -18173,7 +18173,7 @@ var require_router = __commonJS({
         var route;
         while (match !== true && idx < stack.length) {
           layer = stack[idx++];
-          match = matchLayer(layer, path2);
+          match = matchLayer(layer, path);
           route = layer.route;
           if (typeof match !== "boolean") {
             layerError = layerError || match;
@@ -18211,18 +18211,18 @@ var require_router = __commonJS({
           } else if (route) {
             layer.handle_request(req, res, next);
           } else {
-            trim_prefix(layer, layerError, layerPath, path2);
+            trim_prefix(layer, layerError, layerPath, path);
           }
           sync = 0;
         });
       }
-      function trim_prefix(layer, layerError, layerPath, path2) {
+      function trim_prefix(layer, layerError, layerPath, path) {
         if (layerPath.length !== 0) {
-          if (layerPath !== path2.slice(0, layerPath.length)) {
+          if (layerPath !== path.slice(0, layerPath.length)) {
             next(layerError);
             return;
           }
-          var c = path2[layerPath.length];
+          var c = path[layerPath.length];
           if (c && c !== "/" && c !== ".") return next(layerError);
           debug("trim prefix (%s) from url %s", layerPath, req.url);
           removed = layerPath;
@@ -18300,7 +18300,7 @@ var require_router = __commonJS({
     };
     proto.use = function use(fn) {
       var offset = 0;
-      var path2 = "/";
+      var path = "/";
       if (typeof fn !== "function") {
         var arg = fn;
         while (Array.isArray(arg) && arg.length !== 0) {
@@ -18308,7 +18308,7 @@ var require_router = __commonJS({
         }
         if (typeof arg !== "function") {
           offset = 1;
-          path2 = fn;
+          path = fn;
         }
       }
       var callbacks = flatten(slice.call(arguments, offset));
@@ -18320,8 +18320,8 @@ var require_router = __commonJS({
         if (typeof fn !== "function") {
           throw new TypeError("Router.use() requires a middleware function but got a " + gettype(fn));
         }
-        debug("use %o %s", path2, fn.name || "<anonymous>");
-        var layer = new Layer(path2, {
+        debug("use %o %s", path, fn.name || "<anonymous>");
+        var layer = new Layer(path, {
           sensitive: this.caseSensitive,
           strict: false,
           end: false
@@ -18331,9 +18331,9 @@ var require_router = __commonJS({
       }
       return this;
     };
-    proto.route = function route(path2) {
-      var route2 = new Route(path2);
-      var layer = new Layer(path2, {
+    proto.route = function route(path) {
+      var route2 = new Route(path);
+      var layer = new Layer(path, {
         sensitive: this.caseSensitive,
         strict: this.strict,
         end: true
@@ -18343,8 +18343,8 @@ var require_router = __commonJS({
       return route2;
     };
     methods.concat("all").forEach(function(method) {
-      proto[method] = function(path2) {
-        var route = this.route(path2);
+      proto[method] = function(path) {
+        var route = this.route(path);
         route[method].apply(route, slice.call(arguments, 1));
         return this;
       };
@@ -18380,9 +18380,9 @@ var require_router = __commonJS({
       }
       return toString.call(obj).replace(objectRegExp, "$1");
     }
-    function matchLayer(layer, path2) {
+    function matchLayer(layer, path) {
       try {
-        return layer.match(path2);
+        return layer.match(path);
       } catch (err) {
         return err;
       }
@@ -18500,13 +18500,13 @@ var require_view = __commonJS({
   "node_modules/express/lib/view.js"(exports, module) {
     "use strict";
     var debug = require_src()("express:view");
-    var path2 = __require("path");
-    var fs2 = __require("fs");
-    var dirname = path2.dirname;
-    var basename = path2.basename;
-    var extname = path2.extname;
-    var join = path2.join;
-    var resolve = path2.resolve;
+    var path = __require("path");
+    var fs = __require("fs");
+    var dirname = path.dirname;
+    var basename = path.basename;
+    var extname = path.extname;
+    var join = path.join;
+    var resolve = path.resolve;
     module.exports = View;
     function View(name, options) {
       var opts = options || {};
@@ -18535,17 +18535,17 @@ var require_view = __commonJS({
       this.path = this.lookup(fileName);
     }
     View.prototype.lookup = function lookup(name) {
-      var path3;
+      var path2;
       var roots = [].concat(this.root);
       debug('lookup "%s"', name);
-      for (var i = 0; i < roots.length && !path3; i++) {
+      for (var i = 0; i < roots.length && !path2; i++) {
         var root = roots[i];
         var loc = resolve(root, name);
         var dir = dirname(loc);
         var file = basename(loc);
-        path3 = this.resolve(dir, file);
+        path2 = this.resolve(dir, file);
       }
-      return path3;
+      return path2;
     };
     View.prototype.render = function render(options, callback) {
       debug('render "%s"', this.path);
@@ -18553,21 +18553,21 @@ var require_view = __commonJS({
     };
     View.prototype.resolve = function resolve2(dir, file) {
       var ext = this.ext;
-      var path3 = join(dir, file);
-      var stat = tryStat(path3);
+      var path2 = join(dir, file);
+      var stat = tryStat(path2);
       if (stat && stat.isFile()) {
-        return path3;
+        return path2;
       }
-      path3 = join(dir, basename(file, ext), "index" + ext);
-      stat = tryStat(path3);
+      path2 = join(dir, basename(file, ext), "index" + ext);
+      stat = tryStat(path2);
       if (stat && stat.isFile()) {
-        return path3;
+        return path2;
       }
     };
-    function tryStat(path3) {
-      debug('stat "%s"', path3);
+    function tryStat(path2) {
+      debug('stat "%s"', path2);
       try {
-        return fs2.statSync(path3);
+        return fs.statSync(path2);
       } catch (e) {
         return void 0;
       }
@@ -18921,8 +18921,8 @@ var require_types = __commonJS({
 // node_modules/mime/mime.js
 var require_mime = __commonJS({
   "node_modules/mime/mime.js"(exports, module) {
-    var path2 = __require("path");
-    var fs2 = __require("fs");
+    var path = __require("path");
+    var fs = __require("fs");
     function Mime() {
       this.types = /* @__PURE__ */ Object.create(null);
       this.extensions = /* @__PURE__ */ Object.create(null);
@@ -18943,7 +18943,7 @@ var require_mime = __commonJS({
     };
     Mime.prototype.load = function(file) {
       this._loading = file;
-      var map = {}, content = fs2.readFileSync(file, "ascii"), lines = content.split(/[\r\n]+/);
+      var map = {}, content = fs.readFileSync(file, "ascii"), lines = content.split(/[\r\n]+/);
       lines.forEach(function(line) {
         var fields = line.replace(/\s*#.*|^\s*|\s*$/g, "").split(/\s+/);
         map[fields.shift()] = fields;
@@ -18951,8 +18951,8 @@ var require_mime = __commonJS({
       this.define(map);
       this._loading = null;
     };
-    Mime.prototype.lookup = function(path3, fallback) {
-      var ext = path3.replace(/^.*[\.\/\\]/, "").toLowerCase();
+    Mime.prototype.lookup = function(path2, fallback) {
+      var ext = path2.replace(/^.*[\.\/\\]/, "").toLowerCase();
       return this.types[ext] || fallback || this.default_type;
     };
     Mime.prototype.extension = function(mimeType) {
@@ -19181,33 +19181,33 @@ var require_send = __commonJS({
     var escapeHtml = require_escape_html();
     var etag = require_etag();
     var fresh = require_fresh();
-    var fs2 = __require("fs");
+    var fs = __require("fs");
     var mime = require_mime();
     var ms = require_ms2();
     var onFinished = require_on_finished();
     var parseRange = require_range_parser();
-    var path2 = __require("path");
+    var path = __require("path");
     var statuses = require_statuses();
     var Stream = __require("stream");
     var util = __require("util");
-    var extname = path2.extname;
-    var join = path2.join;
-    var normalize = path2.normalize;
-    var resolve = path2.resolve;
-    var sep = path2.sep;
+    var extname = path.extname;
+    var join = path.join;
+    var normalize = path.normalize;
+    var resolve = path.resolve;
+    var sep = path.sep;
     var BYTES_RANGE_REGEXP = /^ *bytes=/;
     var MAX_MAXAGE = 60 * 60 * 24 * 365 * 1e3;
     var UP_PATH_REGEXP = /(?:^|[\\/])\.\.(?:[\\/]|$)/;
     module.exports = send;
     module.exports.mime = mime;
-    function send(req, path3, options) {
-      return new SendStream(req, path3, options);
+    function send(req, path2, options) {
+      return new SendStream(req, path2, options);
     }
-    function SendStream(req, path3, options) {
+    function SendStream(req, path2, options) {
       Stream.call(this);
       var opts = options || {};
       this.options = opts;
-      this.path = path3;
+      this.path = path2;
       this.req = req;
       this._acceptRanges = opts.acceptRanges !== void 0 ? Boolean(opts.acceptRanges) : true;
       this._cacheControl = opts.cacheControl !== void 0 ? Boolean(opts.cacheControl) : true;
@@ -19253,8 +19253,8 @@ var require_send = __commonJS({
       this._index = index2;
       return this;
     }, "send.index: pass index as option");
-    SendStream.prototype.root = function root(path3) {
-      this._root = resolve(String(path3));
+    SendStream.prototype.root = function root(path2) {
+      this._root = resolve(String(path2));
       debug("root %s", this._root);
       return this;
     };
@@ -19367,10 +19367,10 @@ var require_send = __commonJS({
       var lastModified = this.res.getHeader("Last-Modified");
       return parseHttpDate(lastModified) <= parseHttpDate(ifRange);
     };
-    SendStream.prototype.redirect = function redirect(path3) {
+    SendStream.prototype.redirect = function redirect(path2) {
       var res = this.res;
       if (hasListeners(this, "directory")) {
-        this.emit("directory", res, path3);
+        this.emit("directory", res, path2);
         return;
       }
       if (this.hasTrailingSlash()) {
@@ -19390,42 +19390,42 @@ var require_send = __commonJS({
     SendStream.prototype.pipe = function pipe(res) {
       var root = this._root;
       this.res = res;
-      var path3 = decode(this.path);
-      if (path3 === -1) {
+      var path2 = decode(this.path);
+      if (path2 === -1) {
         this.error(400);
         return res;
       }
-      if (~path3.indexOf("\0")) {
+      if (~path2.indexOf("\0")) {
         this.error(400);
         return res;
       }
       var parts;
       if (root !== null) {
-        if (path3) {
-          path3 = normalize("." + sep + path3);
+        if (path2) {
+          path2 = normalize("." + sep + path2);
         }
-        if (UP_PATH_REGEXP.test(path3)) {
-          debug('malicious path "%s"', path3);
+        if (UP_PATH_REGEXP.test(path2)) {
+          debug('malicious path "%s"', path2);
           this.error(403);
           return res;
         }
-        parts = path3.split(sep);
-        path3 = normalize(join(root, path3));
+        parts = path2.split(sep);
+        path2 = normalize(join(root, path2));
       } else {
-        if (UP_PATH_REGEXP.test(path3)) {
-          debug('malicious path "%s"', path3);
+        if (UP_PATH_REGEXP.test(path2)) {
+          debug('malicious path "%s"', path2);
           this.error(403);
           return res;
         }
-        parts = normalize(path3).split(sep);
-        path3 = resolve(path3);
+        parts = normalize(path2).split(sep);
+        path2 = resolve(path2);
       }
       if (containsDotFile(parts)) {
         var access = this._dotfiles;
         if (access === void 0) {
           access = parts[parts.length - 1][0] === "." ? this._hidden ? "allow" : "ignore" : "allow";
         }
-        debug('%s dotfile "%s"', access, path3);
+        debug('%s dotfile "%s"', access, path2);
         switch (access) {
           case "allow":
             break;
@@ -19439,13 +19439,13 @@ var require_send = __commonJS({
         }
       }
       if (this._index.length && this.hasTrailingSlash()) {
-        this.sendIndex(path3);
+        this.sendIndex(path2);
         return res;
       }
-      this.sendFile(path3);
+      this.sendFile(path2);
       return res;
     };
-    SendStream.prototype.send = function send2(path3, stat) {
+    SendStream.prototype.send = function send2(path2, stat) {
       var len = stat.size;
       var options = this.options;
       var opts = {};
@@ -19457,9 +19457,9 @@ var require_send = __commonJS({
         this.headersAlreadySent();
         return;
       }
-      debug('pipe "%s"', path3);
-      this.setHeader(path3, stat);
-      this.type(path3);
+      debug('pipe "%s"', path2);
+      this.setHeader(path2, stat);
+      this.type(path2);
       if (this.isConditionalGET()) {
         if (this.isPreconditionFailure()) {
           this.error(412);
@@ -19508,28 +19508,28 @@ var require_send = __commonJS({
         res.end();
         return;
       }
-      this.stream(path3, opts);
+      this.stream(path2, opts);
     };
-    SendStream.prototype.sendFile = function sendFile(path3) {
+    SendStream.prototype.sendFile = function sendFile(path2) {
       var i = 0;
       var self = this;
-      debug('stat "%s"', path3);
-      fs2.stat(path3, function onstat(err, stat) {
-        if (err && err.code === "ENOENT" && !extname(path3) && path3[path3.length - 1] !== sep) {
+      debug('stat "%s"', path2);
+      fs.stat(path2, function onstat(err, stat) {
+        if (err && err.code === "ENOENT" && !extname(path2) && path2[path2.length - 1] !== sep) {
           return next(err);
         }
         if (err) return self.onStatError(err);
-        if (stat.isDirectory()) return self.redirect(path3);
-        self.emit("file", path3, stat);
-        self.send(path3, stat);
+        if (stat.isDirectory()) return self.redirect(path2);
+        self.emit("file", path2, stat);
+        self.send(path2, stat);
       });
       function next(err) {
         if (self._extensions.length <= i) {
           return err ? self.onStatError(err) : self.error(404);
         }
-        var p = path3 + "." + self._extensions[i++];
+        var p = path2 + "." + self._extensions[i++];
         debug('stat "%s"', p);
-        fs2.stat(p, function(err2, stat) {
+        fs.stat(p, function(err2, stat) {
           if (err2) return next(err2);
           if (stat.isDirectory()) return next();
           self.emit("file", p, stat);
@@ -19537,7 +19537,7 @@ var require_send = __commonJS({
         });
       }
     };
-    SendStream.prototype.sendIndex = function sendIndex(path3) {
+    SendStream.prototype.sendIndex = function sendIndex(path2) {
       var i = -1;
       var self = this;
       function next(err) {
@@ -19545,9 +19545,9 @@ var require_send = __commonJS({
           if (err) return self.onStatError(err);
           return self.error(404);
         }
-        var p = join(path3, self._index[i]);
+        var p = join(path2, self._index[i]);
         debug('stat "%s"', p);
-        fs2.stat(p, function(err2, stat) {
+        fs.stat(p, function(err2, stat) {
           if (err2) return next(err2);
           if (stat.isDirectory()) return next();
           self.emit("file", p, stat);
@@ -19556,10 +19556,10 @@ var require_send = __commonJS({
       }
       next();
     };
-    SendStream.prototype.stream = function stream(path3, options) {
+    SendStream.prototype.stream = function stream(path2, options) {
       var self = this;
       var res = this.res;
-      var stream2 = fs2.createReadStream(path3, options);
+      var stream2 = fs.createReadStream(path2, options);
       this.emit("stream", stream2);
       stream2.pipe(res);
       function cleanup() {
@@ -19574,10 +19574,10 @@ var require_send = __commonJS({
         self.emit("end");
       });
     };
-    SendStream.prototype.type = function type(path3) {
+    SendStream.prototype.type = function type(path2) {
       var res = this.res;
       if (res.getHeader("Content-Type")) return;
-      var type2 = mime.lookup(path3);
+      var type2 = mime.lookup(path2);
       if (!type2) {
         debug("no content-type");
         return;
@@ -19586,9 +19586,9 @@ var require_send = __commonJS({
       debug("content-type %s", type2);
       res.setHeader("Content-Type", type2 + (charset ? "; charset=" + charset : ""));
     };
-    SendStream.prototype.setHeader = function setHeader(path3, stat) {
+    SendStream.prototype.setHeader = function setHeader(path2, stat) {
       var res = this.res;
-      this.emit("headers", res, path3, stat);
+      this.emit("headers", res, path2, stat);
       if (this._acceptRanges && !res.getHeader("Accept-Ranges")) {
         debug("accept ranges");
         res.setHeader("Accept-Ranges", "bytes");
@@ -19647,9 +19647,9 @@ var require_send = __commonJS({
       }
       return err instanceof Error ? createError(status, err, { expose: false }) : createError(status, err);
     }
-    function decode(path3) {
+    function decode(path2) {
       try {
-        return decodeURIComponent(path3);
+        return decodeURIComponent(path2);
       } catch (err) {
         return -1;
       }
@@ -20574,10 +20574,10 @@ var require_utils2 = __commonJS({
     var querystring = __require("querystring");
     exports.etag = createETagGenerator({ weak: false });
     exports.wetag = createETagGenerator({ weak: true });
-    exports.isAbsolute = function(path2) {
-      if ("/" === path2[0]) return true;
-      if (":" === path2[1] && ("\\" === path2[2] || "/" === path2[2])) return true;
-      if ("\\\\" === path2.substring(0, 2)) return true;
+    exports.isAbsolute = function(path) {
+      if ("/" === path[0]) return true;
+      if (":" === path[1] && ("\\" === path[2] || "/" === path[2])) return true;
+      if ("\\\\" === path.substring(0, 2)) return true;
     };
     exports.flatten = deprecate.function(
       flatten,
@@ -20789,7 +20789,7 @@ var require_application = __commonJS({
     };
     app2.use = function use(fn) {
       var offset = 0;
-      var path2 = "/";
+      var path = "/";
       if (typeof fn !== "function") {
         var arg = fn;
         while (Array.isArray(arg) && arg.length !== 0) {
@@ -20797,7 +20797,7 @@ var require_application = __commonJS({
         }
         if (typeof arg !== "function") {
           offset = 1;
-          path2 = fn;
+          path = fn;
         }
       }
       var fns = flatten(slice.call(arguments, offset));
@@ -20808,12 +20808,12 @@ var require_application = __commonJS({
       var router = this._router;
       fns.forEach(function(fn2) {
         if (!fn2 || !fn2.handle || !fn2.set) {
-          return router.use(path2, fn2);
+          return router.use(path, fn2);
         }
-        debug(".use app under %s", path2);
-        fn2.mountpath = path2;
+        debug(".use app under %s", path);
+        fn2.mountpath = path;
         fn2.parent = this;
-        router.use(path2, function mounted_app(req, res, next) {
+        router.use(path, function mounted_app(req, res, next) {
           var orig = req.app;
           fn2.handle(req, res, function(err) {
             setPrototypeOf(req, orig.request);
@@ -20825,9 +20825,9 @@ var require_application = __commonJS({
       }, this);
       return this;
     };
-    app2.route = function route(path2) {
+    app2.route = function route(path) {
       this.lazyrouter();
-      return this._router.route(path2);
+      return this._router.route(path);
     };
     app2.engine = function engine(ext, fn) {
       if (typeof fn !== "function") {
@@ -20878,7 +20878,7 @@ var require_application = __commonJS({
       }
       return this;
     };
-    app2.path = function path2() {
+    app2.path = function path() {
       return this.parent ? this.parent.path() + this.mountpath : "";
     };
     app2.enabled = function enabled(setting) {
@@ -20894,19 +20894,19 @@ var require_application = __commonJS({
       return this.set(setting, false);
     };
     methods.forEach(function(method) {
-      app2[method] = function(path2) {
+      app2[method] = function(path) {
         if (method === "get" && arguments.length === 1) {
-          return this.set(path2);
+          return this.set(path);
         }
         this.lazyrouter();
-        var route = this._router.route(path2);
+        var route = this._router.route(path);
         route[method].apply(route, slice.call(arguments, 1));
         return this;
       };
     });
-    app2.all = function all(path2) {
+    app2.all = function all(path) {
       this.lazyrouter();
-      var route = this._router.route(path2);
+      var route = this._router.route(path);
       var args = slice.call(arguments, 1);
       for (var i = 0; i < methods.length; i++) {
         route[methods[i]].apply(route, args);
@@ -21665,7 +21665,7 @@ var require_request = __commonJS({
       var subdomains2 = !isIP(hostname) ? hostname.split(".").reverse() : [hostname];
       return subdomains2.slice(offset);
     });
-    defineGetter(req, "path", function path2() {
+    defineGetter(req, "path", function path() {
       return parse(this).pathname;
     });
     defineGetter(req, "hostname", function hostname() {
@@ -21987,7 +21987,7 @@ var require_response = __commonJS({
     var http = __require("http");
     var isAbsolute = require_utils2().isAbsolute;
     var onFinished = require_on_finished();
-    var path2 = __require("path");
+    var path = __require("path");
     var statuses = require_statuses();
     var merge = require_utils_merge();
     var sign = require_cookie_signature().sign;
@@ -21996,9 +21996,9 @@ var require_response = __commonJS({
     var setCharset = require_utils2().setCharset;
     var cookie = require_cookie();
     var send = require_send();
-    var extname = path2.extname;
+    var extname = path.extname;
     var mime = send.mime;
-    var resolve = path2.resolve;
+    var resolve = path.resolve;
     var vary = require_vary();
     var res = Object.create(http.ServerResponse.prototype);
     module.exports = res;
@@ -22175,26 +22175,26 @@ var require_response = __commonJS({
       this.type("txt");
       return this.send(body);
     };
-    res.sendFile = function sendFile(path3, options, callback) {
+    res.sendFile = function sendFile(path2, options, callback) {
       var done = callback;
       var req = this.req;
       var res2 = this;
       var next = req.next;
       var opts = options || {};
-      if (!path3) {
+      if (!path2) {
         throw new TypeError("path argument is required to res.sendFile");
       }
-      if (typeof path3 !== "string") {
+      if (typeof path2 !== "string") {
         throw new TypeError("path must be a string to res.sendFile");
       }
       if (typeof options === "function") {
         done = options;
         opts = {};
       }
-      if (!opts.root && !isAbsolute(path3)) {
+      if (!opts.root && !isAbsolute(path2)) {
         throw new TypeError("path must be absolute or specify root to res.sendFile");
       }
-      var pathname = encodeURI(path3);
+      var pathname = encodeURI(path2);
       var file = send(req, pathname, opts);
       sendfile(res2, file, opts, function(err) {
         if (done) return done(err);
@@ -22204,7 +22204,7 @@ var require_response = __commonJS({
         }
       });
     };
-    res.sendfile = function(path3, options, callback) {
+    res.sendfile = function(path2, options, callback) {
       var done = callback;
       var req = this.req;
       var res2 = this;
@@ -22214,7 +22214,7 @@ var require_response = __commonJS({
         done = options;
         opts = {};
       }
-      var file = send(req, path3, opts);
+      var file = send(req, path2, opts);
       sendfile(res2, file, opts, function(err) {
         if (done) return done(err);
         if (err && err.code === "EISDIR") return next();
@@ -22227,7 +22227,7 @@ var require_response = __commonJS({
       res.sendfile,
       "res.sendfile: Use res.sendFile instead"
     );
-    res.download = function download(path3, filename, options, callback) {
+    res.download = function download(path2, filename, options, callback) {
       var done = callback;
       var name = filename;
       var opts = options || null;
@@ -22244,7 +22244,7 @@ var require_response = __commonJS({
         opts = filename;
       }
       var headers = {
-        "Content-Disposition": contentDisposition(name || path3)
+        "Content-Disposition": contentDisposition(name || path2)
       };
       if (opts && opts.headers) {
         var keys = Object.keys(opts.headers);
@@ -22257,7 +22257,7 @@ var require_response = __commonJS({
       }
       opts = Object.create(opts);
       opts.headers = headers;
-      var fullPath = !opts.root ? resolve(path3) : path3;
+      var fullPath = !opts.root ? resolve(path2) : path2;
       return this.sendFile(fullPath, opts, done);
     };
     res.contentType = res.type = function contentType(type) {
@@ -22558,11 +22558,11 @@ var require_serve_static = __commonJS({
         }
         var forwardError = !fallthrough;
         var originalUrl = parseUrl.original(req);
-        var path2 = parseUrl(req).pathname;
-        if (path2 === "/" && originalUrl.pathname.substr(-1) !== "/") {
-          path2 = "";
+        var path = parseUrl(req).pathname;
+        if (path === "/" && originalUrl.pathname.substr(-1) !== "/") {
+          path = "";
         }
-        var stream = send(req, path2, opts);
+        var stream = send(req, path, opts);
         stream.on("directory", onDirectory);
         if (setHeaders) {
           stream.on("headers", setHeaders);
@@ -22700,8 +22700,6 @@ var require_express2 = __commonJS({
 
 // server.ts
 var import_express = __toESM(require_express2(), 1);
-import fs from "fs";
-import path from "path";
 import { createServer as createViteServer } from "vite";
 
 // src/server/physics.ts
@@ -22744,7 +22742,8 @@ function calculateState(Tc, p) {
   }
   const Psat_p = 0.611 * Math.exp(17.27 * Tc / (Tc + 237.3));
   const Psat_r = 0.611 * Math.exp(17.27 * p.RoomTemp / (p.RoomTemp + 237.3));
-  let Q_evap = (p.Coeff_Evap_B + p.Coeff_Evap_C * Math.pow(p.RPM, 3)) * Liq_Area_m2 * (Psat_p - p.RoomRH / 100 * Psat_r) * 1e3;
+  const effectiveRPM = mode === "sink" || mode === "coil" ? 0 : p.RPM;
+  let Q_evap = (p.Coeff_Evap_B + p.Coeff_Evap_C * Math.pow(effectiveRPM, 3)) * Liq_Area_m2 * (Psat_p - p.RoomRH / 100 * Psat_r) * 1e3;
   if (Q_evap < 0) {
     Q_evap = 0;
   }
@@ -22864,10 +22863,32 @@ function runSimulation(params, caseId, colorIndex = 0) {
   maxQ = Math.max(maxQ, initial.Q_cool);
   stepCount++;
   while (Time <= maxComputeSeconds) {
-    if (T_curr <= params.TapTemp + 0.05) {
+    if (Time >= maxDisplaySeconds && RTarget !== null && (targetCustom > 20 || R20 !== null)) {
       break;
     }
-    if (Time > maxDisplaySeconds && RTarget !== null && (targetCustom > 20 || R20 !== null)) {
+    if (T_curr <= params.TapTemp + 0.05) {
+      T_curr = params.TapTemp;
+      while (Time < maxDisplaySeconds) {
+        Time = Math.min(maxDisplaySeconds, Time + 60);
+        const state = calculateState(T_curr, params);
+        timeSeries.push({
+          timeMin: Number((Time / 60).toFixed(2)),
+          timeSec: Math.round(Time),
+          soupTemp: Number(T_curr.toFixed(2)),
+          tapIn: Number(params.TapTemp.toFixed(1)),
+          tapOut: Number(state.Tap_Out.toFixed(2)),
+          uVal: Number(state.U.toFixed(1)),
+          reTotal: Number(state.Re_Total.toFixed(1)),
+          reRot: Number(state.Re_Rot.toFixed(1)),
+          reTube: Number(state.Re_Tube.toFixed(1)),
+          qCool: 0,
+          qEvap: 0,
+          qConv: 0,
+          qLoss: 0,
+          latentRatio: 0,
+          dTdt: 0
+        });
+      }
       break;
     }
     const prevT = T_curr;
@@ -22950,11 +22971,8 @@ function runSimulation(params, caseId, colorIndex = 0) {
     stepCount++;
   }
   const avgU = stepCount > 0 ? uSum / stepCount : 0;
-  const avgQCool = stepCount > 0 ? qSum / stepCount : 0;
-  const totalWaterUsedL = params.TapFlow * finalTimeMin;
   const deltaT = params.StartTemp - T_curr;
   const totalHeatJ = params.Soup_mass * getCp(params.Brix) * Math.max(0, deltaT);
-  const totalHeatExtractedKcal = totalHeatJ / 4184;
   return {
     id: caseId || `case_${Date.now()}_${Math.random().toString(36).substring(2, 6)}`,
     caseName: params.caseName || "Case_1",
@@ -23019,65 +23037,322 @@ var PRESETS = {
     }
   }
 };
+function run3ModesSimulation(params) {
+  const rotaryParams = { ...params, chillerType: "rotary" };
+  const coilParams = { ...params, chillerType: "coil", RPM: 0 };
+  const sinkParams = { ...params, chillerType: "sink", RPM: 0 };
+  return {
+    rotary: runSimulation(rotaryParams, "3m_rotary", 0),
+    coil: runSimulation(coilParams, "3m_coil", 1),
+    sink: runSimulation(sinkParams, "3m_sink", 2)
+  };
+}
+
+// src/server/simulationService.ts
+function validateAndNormalizeParams(input) {
+  if (!input || typeof input !== "object") {
+    return { valid: false, error: "\u30EA\u30AF\u30A8\u30B9\u30C8\u30DC\u30C7\u30A3\u304C\u7A7A\u307E\u305F\u306F\u7121\u52B9\u306AJSON\u3067\u3059\u3002" };
+  }
+  const rawSoupMass = input.soup_mass ?? input.soupMass ?? input.Soup_mass ?? 45;
+  const rawPotDiam = input.pot_diameter ?? input.potDiameter ?? input.Pot_D_mm ?? 450;
+  const rawWaterTemp = input.water_temp ?? input.waterTemp ?? input.TapTemp ?? 18;
+  const rawTargetTemp = input.target_temp ?? input.targetTemp ?? input.customTargetTemp ?? 30;
+  const rawFlowRate = input.flow_rate ?? input.flowRate ?? input.TapFlow ?? 18;
+  const rawRpm = input.rpm ?? input.RPM ?? 70;
+  const rawMode = (input.mode ?? input.chillerType ?? "quliya").toString().toLowerCase();
+  const rawStartTemp = input.start_temp ?? input.startTemp ?? input.StartTemp ?? 95;
+  const rawPotHeight = input.pot_height ?? input.potHeight ?? input.Pot_H_mm ?? 390;
+  const rawRoomTemp = input.room_temp ?? input.roomTemp ?? input.RoomTemp ?? 25;
+  const rawRoomRH = input.room_rh ?? input.roomRH ?? input.RoomRH ?? 80;
+  const rawBrix = input.brix ?? input.Brix ?? 0;
+  const soup_mass = Number(rawSoupMass);
+  const pot_diameter = Number(rawPotDiam);
+  const water_temp = Number(rawWaterTemp);
+  const target_temp = Number(rawTargetTemp);
+  const flow_rate = Number(rawFlowRate);
+  const rpm = Number(rawRpm);
+  const start_temp = Number(rawStartTemp);
+  const pot_height = Number(rawPotHeight);
+  const room_temp = Number(rawRoomTemp);
+  const room_rh = Number(rawRoomRH);
+  const brix = Number(rawBrix);
+  if (isNaN(soup_mass) || soup_mass <= 0 || soup_mass > 1e3) {
+    return { valid: false, error: "soup_mass(\u30B9\u30FC\u30D7\u8CEA\u91CF)\u306F 1\u301C1000 [kg] \u306E\u7BC4\u56F2\u3067\u6307\u5B9A\u3057\u3066\u304F\u3060\u3055\u3044\u3002" };
+  }
+  if (isNaN(pot_diameter) || pot_diameter < 100 || pot_diameter > 1500) {
+    return { valid: false, error: "pot_diameter(\u5BF8\u80F4\u934B\u5185\u5F84)\u306F 100\u301C1500 [mm] \u306E\u7BC4\u56F2\u3067\u6307\u5B9A\u3057\u3066\u304F\u3060\u3055\u3044\u3002" };
+  }
+  if (isNaN(water_temp) || water_temp < 0 || water_temp > 50) {
+    return { valid: false, error: "water_temp(\u7D66\u6C34\u6E29\u5EA6)\u306F 0\u301C50 [\u2103] \u306E\u7BC4\u56F2\u3067\u6307\u5B9A\u3057\u3066\u304F\u3060\u3055\u3044\u3002" };
+  }
+  if (isNaN(target_temp) || target_temp < 5 || target_temp > 95) {
+    return { valid: false, error: "target_temp(\u76EE\u6A19\u6E29\u5EA6)\u306F 5\u301C95 [\u2103] \u306E\u7BC4\u56F2\u3067\u6307\u5B9A\u3057\u3066\u304F\u3060\u3055\u3044\u3002" };
+  }
+  if (isNaN(flow_rate) || flow_rate <= 0 || flow_rate > 100) {
+    return { valid: false, error: "flow_rate(\u51B7\u5374\u6C34\u6D41\u91CF)\u306F 1\u301C100 [L/min] \u306E\u7BC4\u56F2\u3067\u6307\u5B9A\u3057\u3066\u304F\u3060\u3055\u3044\u3002" };
+  }
+  if (isNaN(rpm) || rpm < 0 || rpm > 1500) {
+    return { valid: false, error: "rpm(\u56DE\u8EE2\u6570)\u306F 0\u301C1500 [RPM] \u306E\u7BC4\u56F2\u3067\u6307\u5B9A\u3057\u3066\u304F\u3060\u3055\u3044\u3002" };
+  }
+  if (isNaN(start_temp) || start_temp <= target_temp || start_temp > 100) {
+    return { valid: false, error: `start_temp(\u521D\u671F\u6E29\u5EA6: ${start_temp}\u2103)\u306F target_temp(\u76EE\u6A19\u6E29\u5EA6: ${target_temp}\u2103) \u3088\u308A\u9AD8\u304F\u3001100\u2103\u4EE5\u4E0B\u3067\u3042\u308B\u5FC5\u8981\u304C\u3042\u308A\u307E\u3059\u3002` };
+  }
+  if (target_temp < water_temp) {
+    return {
+      valid: false,
+      error: `\u76EE\u6A19\u51B7\u5374\u6E29\u5EA6 (${target_temp}\u2103) \u306F\u7D66\u6C34\u6E29\u5EA6 (${water_temp}\u2103) \u4EE5\u4E0A\u306B\u8A2D\u5B9A\u3057\u3066\u304F\u3060\u3055\u3044\u3002\u6C34\u51B7\u65B9\u5F0F\u3067\u306F\u7D66\u6C34\u6E29\u5EA6\u672A\u6E80\u307E\u3067\u51B7\u5374\u3059\u308B\u3053\u3068\u306F\u7269\u7406\u7684\u306B\u4E0D\u53EF\u80FD\u3067\u3059\u3002`
+    };
+  }
+  let mode = "quliya";
+  if (rawMode === "coil") {
+    mode = "coil";
+  } else if (rawMode === "sink") {
+    mode = "sink";
+  } else if (rawMode === "quliya" || rawMode === "rotary") {
+    mode = "quliya";
+  } else {
+    return { valid: false, error: "mode\u306F 'quliya', 'coil', 'sink' \u306E\u3044\u305A\u308C\u304B\u3092\u6307\u5B9A\u3057\u3066\u304F\u3060\u3055\u3044\u3002" };
+  }
+  return {
+    valid: true,
+    params: {
+      soup_mass,
+      pot_diameter,
+      water_temp,
+      target_temp,
+      flow_rate,
+      rpm,
+      mode,
+      start_temp,
+      pot_height: isNaN(pot_height) ? 390 : pot_height,
+      room_temp: isNaN(room_temp) ? 25 : room_temp,
+      room_rh: isNaN(room_rh) ? 80 : room_rh,
+      brix: isNaN(brix) ? 0 : brix
+    }
+  };
+}
+function getViscosity2(Tc, Brix) {
+  const Tk = Tc + 273.15;
+  const muWater = 2414e-8 * Math.pow(10, 247.8 / (Tk - 140));
+  return muWater * Math.pow(10, 0.05 * Brix);
+}
+function getDensity2(Tc, Brix) {
+  return 1e3 - Math.pow(Tc - 4, 2) / 180 + 5 * Brix;
+}
+function getCp2(Brix) {
+  return (4.186 - 0.03 * Brix) * 1e3;
+}
+function runServerSimulation(p) {
+  const mode = p.mode;
+  const effectiveRPM = mode === "sink" || mode === "coil" ? 0 : p.rpm;
+  const Pot_Radius_m = p.pot_diameter / 2e3;
+  const Pot_Diam_m = p.pot_diameter / 1e3;
+  const Pot_Height_m = p.pot_height / 1e3;
+  const Liq_Area_m2 = Math.PI * Math.pow(Pot_Radius_m, 2);
+  const Cp_Soup = getCp2(p.brix);
+  let Ex_Area_m2 = 0;
+  let effectiveExD = 100;
+  let fixedU = null;
+  if (mode === "sink") {
+    const bottomArea = Math.PI * Math.pow(Pot_Radius_m, 2);
+    const halfSideArea = Pot_Diam_m * Math.PI * (Pot_Height_m / 2);
+    Ex_Area_m2 = bottomArea + halfSideArea;
+    fixedU = 100;
+  } else if (mode === "coil") {
+    effectiveExD = 9.52;
+    const effectiveExL = 1e4;
+    Ex_Area_m2 = effectiveExD / 1e3 * Math.PI * (effectiveExL / 1e3);
+    fixedU = 200;
+  } else {
+    effectiveExD = 100;
+    const effectiveExL = 300;
+    Ex_Area_m2 = effectiveExD / 1e3 * Math.PI * (effectiveExL / 1e3);
+  }
+  const Psat_r = 0.611 * Math.exp(17.27 * p.room_temp / (p.room_temp + 237.3));
+  const calcDeriv = (Tc) => {
+    const Rho_Curr = getDensity2(Tc, p.brix);
+    const Mu_Curr = getViscosity2(Tc, p.brix);
+    const Vol_m3 = p.soup_mass / Rho_Curr;
+    const H_liq = Vol_m3 / Liq_Area_m2;
+    const Side_Area = Pot_Diam_m * Math.PI * H_liq;
+    const Psat_p = 0.611 * Math.exp(17.27 * Tc / (Tc + 237.3));
+    const Coeff_Evap_B = 0.135;
+    const Coeff_Evap_C = 157e-12;
+    let Q_evap = (Coeff_Evap_B + Coeff_Evap_C * Math.pow(effectiveRPM, 3)) * Liq_Area_m2 * (Psat_p - p.room_rh / 100 * Psat_r) * 1e3;
+    if (Q_evap < 0) Q_evap = 0;
+    const exposedSideArea = mode === "sink" ? Math.max(0, Pot_Diam_m * Math.PI * Math.max(0, H_liq - Pot_Height_m / 2)) : Side_Area;
+    const Coeff_Conv_A = 15;
+    const Q_conv = Coeff_Conv_A * exposedSideArea * (Tc - p.room_temp);
+    const Q_loss = Q_evap + Q_conv;
+    let Q_water = 0;
+    let U_val = 0;
+    if (p.flow_rate > 0) {
+      if (fixedU !== null) {
+        U_val = fixedU;
+      } else {
+        const n_rps = Math.max(effectiveRPM, 10) / 60;
+        const D_char = effectiveExD / 1e3;
+        const Re_Rot = Rho_Curr * n_rps * Math.pow(D_char, 2) / Mu_Curr;
+        const Rho_Tap = getDensity2(p.water_temp, 0);
+        const Mu_Tap = getViscosity2(p.water_temp, 0);
+        const Flow_m3s = Math.max(p.flow_rate, 0.1) / 6e4;
+        const Tube_D_m = effectiveExD / 1e3;
+        const Area_Tube = Math.PI * Math.pow(Tube_D_m, 2) / 4;
+        const Velocity = Flow_m3s / Area_Tube;
+        const Re_Tube = Rho_Tap * Velocity * Tube_D_m / Mu_Tap;
+        const Alpha = 0.2588;
+        const C_Re_Base = 3.8508;
+        const Exp_Total = 0.6301;
+        const Re_Total = Math.sqrt(Math.pow(Alpha * Re_Rot, 2) + Math.pow(Re_Tube, 2));
+        U_val = C_Re_Base * Math.pow(Re_Total, Exp_Total);
+      }
+      const M_dot = p.flow_rate / 60;
+      const Cap = M_dot * 4186;
+      const NTU = U_val * Ex_Area_m2 / Cap;
+      const Eff = 1 - Math.exp(-NTU);
+      Q_water = Eff * Cap * (Tc - p.water_temp);
+    }
+    const Q_total = Q_water + Q_loss;
+    return -Q_total / (p.soup_mass * Cp_Soup);
+  };
+  const series = [];
+  let T_curr = p.start_temp;
+  const targetT = p.target_temp;
+  const maxMinutes = 180;
+  let timeTo50C = null;
+  let timeTo40C = null;
+  let timeTo30C = null;
+  let timeToTarget = null;
+  series.push({
+    time_min: 0,
+    soup_temp: Number(T_curr.toFixed(1))
+  });
+  for (let m = 1; m <= maxMinutes; m++) {
+    const prevT = T_curr;
+    const prevTime = m - 1;
+    const subDt = 2;
+    const subSteps = 30;
+    for (let s = 0; s < subSteps; s++) {
+      const k1 = calcDeriv(T_curr);
+      const k2 = calcDeriv(T_curr + 0.5 * subDt * k1);
+      const k3 = calcDeriv(T_curr + 0.5 * subDt * k2);
+      const k4 = calcDeriv(T_curr + subDt * k3);
+      T_curr += subDt / 6 * (k1 + 2 * k2 + 2 * k3 + k4);
+    }
+    const interpolateTime = (targetThreshold) => {
+      const frac = (prevT - targetThreshold) / (prevT - T_curr);
+      return prevTime + frac;
+    };
+    if (timeTo50C === null && prevT >= 50 && T_curr <= 50) {
+      timeTo50C = interpolateTime(50);
+    }
+    if (timeTo40C === null && prevT >= 40 && T_curr <= 40) {
+      timeTo40C = interpolateTime(40);
+    }
+    if (timeTo30C === null && prevT >= 30 && T_curr <= 30) {
+      timeTo30C = interpolateTime(30);
+    }
+    if (timeToTarget === null && prevT >= targetT && T_curr <= targetT) {
+      timeToTarget = interpolateTime(targetT);
+    }
+    series.push({
+      time_min: m,
+      soup_temp: Number(T_curr.toFixed(1))
+    });
+    if (timeToTarget !== null) {
+      break;
+    }
+    if (T_curr <= p.water_temp + 0.1) {
+      break;
+    }
+  }
+  const roundedTargetTime = timeToTarget !== null ? Math.round(timeToTarget) : null;
+  const totalWaterUsed = roundedTargetTime !== null ? Math.round(p.flow_rate * roundedTargetTime) : 0;
+  return {
+    mode,
+    time_to_target_min: roundedTargetTime,
+    total_water_used_L: totalWaterUsed,
+    series,
+    time_to_50c_min: timeTo50C !== null ? Math.round(timeTo50C) : null,
+    time_to_40c_min: timeTo40C !== null ? Math.round(timeTo40C) : null,
+    time_to_30c_min: timeTo30C !== null ? Math.round(timeTo30C) : null,
+    final_temp: Number(T_curr.toFixed(1))
+  };
+}
 
 // server.ts
 var app = (0, import_express.default)();
 var PORT = process.env.PORT ? parseInt(process.env.PORT, 10) : 3e3;
 app.use(import_express.default.json({ limit: "15mb" }));
-var DIAGRAM_STORAGE_PATH = path.join(process.cwd(), "uploaded_diagram.dat");
-app.get("/api/diagram-image", (_req, res) => {
-  try {
-    if (fs.existsSync(DIAGRAM_STORAGE_PATH)) {
-      const data = fs.readFileSync(DIAGRAM_STORAGE_PATH, "utf-8");
-      return res.json({ image: data });
-    }
-    return res.json({ image: null });
-  } catch (error) {
-    return res.status(500).json({ error: error.message });
-  }
+app.use((_req, res, next) => {
+  res.setHeader("Access-Control-Allow-Origin", "*");
+  res.setHeader("Access-Control-Allow-Methods", "GET, POST, OPTIONS");
+  res.setHeader("Access-Control-Allow-Headers", "Content-Type, Authorization");
+  next();
 });
-app.post("/api/diagram-image", (req, res) => {
-  try {
-    const { image } = req.body;
-    if (image) {
-      fs.writeFileSync(DIAGRAM_STORAGE_PATH, image, "utf-8");
-    } else {
-      if (fs.existsSync(DIAGRAM_STORAGE_PATH)) {
-        fs.unlinkSync(DIAGRAM_STORAGE_PATH);
+app.all("/api/simulate", (req, res) => {
+  if (req.method === "OPTIONS") {
+    return res.status(200).end();
+  }
+  if (req.method === "GET") {
+    return res.json({
+      status: "ok",
+      endpoint: "/api/simulate",
+      description: "QULIYA CHILLER \u4F1D\u71B1\u7269\u7406\u30B7\u30DF\u30E5\u30EC\u30FC\u30B7\u30E7\u30F3API (POST\u306B\u3066\u30D1\u30E9\u30E1\u30FC\u30BF\u9001\u4FE1)",
+      parameters: {
+        soup_mass: "\u30B9\u30FC\u30D7\u8CEA\u91CF [kg] (\u4F8B: 45)",
+        pot_diameter: "\u5BF8\u80F4\u934B\u5185\u5F84 [mm] (\u4F8B: 450)",
+        water_temp: "\u7D66\u6C34\u6E29\u5EA6 [\u2103] (\u4F8B: 18)",
+        target_temp: "\u76EE\u6A19\u51B7\u5374\u6E29\u5EA6 [\u2103] (\u30C7\u30D5\u30A9\u30EB\u30C8: 30)",
+        flow_rate: "\u51B7\u5374\u6C34\u6D41\u91CF [L/min] (\u4F8B: 18)",
+        rpm: "\u652A\u62CC\u30FB\u56DE\u8EE2\u6570 [RPM] (\u4F8B: 70)",
+        mode: "'quliya' | 'coil' | 'sink' (\u30C7\u30D5\u30A9\u30EB\u30C8: 'quliya')"
       }
-    }
-    return res.json({ success: true });
-  } catch (error) {
-    return res.status(500).json({ error: error.message });
+    });
   }
-});
-app.post("/api/simulate", (req, res) => {
+  if (req.method !== "POST") {
+    return res.status(405).json({ error: "Method Not Allowed" });
+  }
   try {
-    const { params, caseId, colorIndex } = req.body;
-    if (!params) {
-      return res.status(400).json({ error: "Parameters are required" });
+    const body = req.body || {};
+    if (body.params && typeof body.params === "object") {
+      const { params, caseId, colorIndex } = body;
+      const result2 = runSimulation(params, caseId, colorIndex ?? 0);
+      return res.json(result2);
     }
-    const result = runSimulation(params, caseId, colorIndex ?? 0);
+    const validation = validateAndNormalizeParams(body);
+    if (!validation.valid) {
+      return res.status(400).json({ error: validation.error });
+    }
+    const result = runServerSimulation(validation.params);
     return res.json(result);
   } catch (error) {
     console.error("Simulation error:", error);
     return res.status(500).json({ error: error.message || "Simulation failed" });
   }
 });
-app.post("/api/simulate-3modes", (req, res) => {
+app.all("/api/simulate-3modes", (req, res) => {
+  if (req.method === "OPTIONS") {
+    return res.status(200).end();
+  }
+  if (req.method !== "POST") {
+    return res.status(405).json({ error: "Method Not Allowed" });
+  }
   try {
-    const { params } = req.body;
-    if (!params) {
-      return res.status(400).json({ error: "Parameters are required" });
+    const body = req.body || {};
+    if (body.params) {
+      const threeModes = run3ModesSimulation(body.params);
+      return res.json(threeModes);
     }
-    const rotaryParams = { ...params, chillerType: "rotary" };
-    const coilParams = { ...params, chillerType: "coil" };
-    const sinkParams = { ...params, chillerType: "sink" };
-    const rotaryRes = runSimulation(rotaryParams, "3m_rotary", 0);
-    const coilRes = runSimulation(coilParams, "3m_coil", 1);
-    const sinkRes = runSimulation(sinkParams, "3m_sink", 2);
+    const validation = validateAndNormalizeParams(body);
+    if (!validation.valid) {
+      return res.status(400).json({ error: validation.error });
+    }
+    const quliyaRes = runServerSimulation({ ...validation.params, mode: "quliya" });
+    const coilRes = runServerSimulation({ ...validation.params, mode: "coil", rpm: 0 });
+    const sinkRes = runServerSimulation({ ...validation.params, mode: "sink", rpm: 0 });
     return res.json({
-      rotary: rotaryRes,
+      quliya: quliyaRes,
       coil: coilRes,
       sink: sinkRes
     });
