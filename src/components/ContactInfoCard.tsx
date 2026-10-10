@@ -62,7 +62,7 @@ export const ContactInfoCard: React.FC = () => {
                 <Phone className="w-3.5 h-3.5 text-emerald-600 shrink-0" />
                 <a
                   href="tel:0256-63-5854"
-                  className="text-xs font-bold text-slate-800 hover:text-cyan-700 font-mono"
+                  className="text-base font-bold text-slate-800 hover:text-cyan-700 font-mono"
                 >
                   0256-63-5854
                 </a>

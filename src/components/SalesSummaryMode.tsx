@@ -37,11 +37,11 @@ export const SalesSummaryMode: React.FC<SalesSummaryModeProps> = ({
   activeResult,
   threeModesData,
 }) => {
-  // お客様情報（提案書・印刷時に印字可能）
+  // お客様情報
   const [customerName, setCustomerName] = useState<string>('');
   const [salesRepName, setSalesRepName] = useState<string>('');
 
-  // 営業試算パラメータ (「詳細」で入力されたスープ条件に基づいて月次試算)
+  // 営業試算パラメータ
   const [dailyBatches, setDailyBatches] = useState<number>(1); // 1日の冷却仕込み回数 (デフォルト1回)
   const [monthlyDays, setMonthlyDays] = useState<number>(26); // 月間稼働日数 (デフォルト26日)
   const [hourlyWage, setHourlyWage] = useState<number>(1200); // パート・スタッフ時給換算 (円)
@@ -60,12 +60,12 @@ export const SalesSummaryMode: React.FC<SalesSummaryModeProps> = ({
   const targetTemp = activeResult.params.customTargetTemp ?? 30;
   const costPerLiter = (activeResult.params.waterCostPerM3 ?? 500) / 1000.0;
 
-  // 各モードの1回あたり数値 (すべて整数で計算・表示)
+  // 各モードの1回あたり数値
   const rotRes = threeModesData.rotary;
   const coilRes = threeModesData.coil;
   const sinkRes = threeModesData.sink;
 
-  // 1回あたりの到達時間（小数2桁なし・整数分）
+  // 1回あたりの到達時間（整数分）
   const rotTime = Math.round(rotRes.timeToTarget ?? 15);
   const coilTime = Math.round(coilRes.timeToTarget ?? 45);
   const sinkTime = Math.round(sinkRes.timeToTarget ?? 90);
@@ -94,19 +94,13 @@ export const SalesSummaryMode: React.FC<SalesSummaryModeProps> = ({
   const timeSavingsHoursMonth = (timeSavingsMinPerBatch * monthlyBatches) / 60.0;
   const laborSavingsMonth = Math.round(timeSavingsHoursMonth * hourlyWage);
 
-  // 月間総メリット (水道代削減 + 人件費換算)
+  // 月間総メリット
   const grossSavingsMonth = waterSavingsMonth + laborSavingsMonth;
 
-  // 月間実質手残り (レンタル料控除後)
+  // 月間実質手残り
   const netSavingsMonth = grossSavingsMonth - monthlyRentalYen;
 
-  const todayStr = new Date().toLocaleDateString('ja-JP', {
-    year: 'numeric',
-    month: 'long',
-    day: 'numeric',
-  });
-
-  // 印刷・PDF保存のトリガー (ファイル名を確実に反映)
+  // 印刷・PDF保存のトリガー
   const handlePrint = () => {
     const originalTitle = document.title;
     const targetFileName = getPdfFileName(customerName);
@@ -119,49 +113,12 @@ export const SalesSummaryMode: React.FC<SalesSummaryModeProps> = ({
 
   return (
     <div className="space-y-2.5">
-      {/* 印刷時のみ最上部に表示される「正式提案書ヘッダー」 */}
-      <div className="hidden print:block border-b-2 border-slate-900 pb-1.5 mb-2">
-        <div className="flex items-center justify-between">
-          <div className="flex items-center space-x-2">
-            <span className="font-extrabold text-sm tracking-tight text-slate-900">
-              {customerName.trim()
-                ? `${customerName.trim().replace(/(様|御中)$/, '').trim()} 様向け QULIYA CHILLER 導入効果試算書`
-                : 'お客様向け QULIYA CHILLER 導入効果試算書'}
-            </span>
-          </div>
-          <div className="text-right text-[9.5px] text-slate-600 font-mono leading-tight">
-            作成日: {todayStr}
-          </div>
-        </div>
-
-        {/* 提案先・営業担当名（入力されている場合） */}
-        {(customerName || salesRepName) && (
-          <div className="mt-1 flex items-center justify-between text-xs bg-slate-50 px-3 py-1 rounded border border-slate-200">
-            <div>
-              <span className="text-[9px] text-slate-500">ご提案先:</span>{' '}
-              <strong className="text-xs text-slate-900">
-                {customerName
-                  ? customerName.endsWith('様') || customerName.endsWith('御中')
-                    ? customerName
-                    : `${customerName} 御中`
-                  : '貴店 御中'}
-              </strong>
-            </div>
-            {salesRepName && (
-              <div className="text-[9px] text-slate-700">
-                担当営業: <strong className="print:text-[11.5px]">{salesRepName}</strong>
-              </div>
-            )}
-          </div>
-        )}
-      </div>
-
-      {/* 1. 画面表示用トップバナー & アクション (印刷時は非表示) */}
-      <div className="bg-gradient-to-r from-slate-900 via-indigo-950 to-slate-900 rounded-xl p-3 text-white shadow-md border border-slate-700/80 no-print">
+      {/* 1. トップバナー & アクション (画面表示そのまま印刷) */}
+      <div className="bg-gradient-to-r from-slate-900 via-indigo-950 to-slate-900 rounded-xl p-3 text-white shadow-md border border-slate-700/80">
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-2.5 border-b border-white/10">
           <div>
             <h2 className="text-base sm:text-lg font-black tracking-tight text-white flex items-center gap-2">
-              QULIYA CHILLER（月額レンタル）導入によるコスト削減シミュレーション
+              QULIYA CHILLER 導入によるコスト削減シミュレーション
             </h2>
             <p className="text-xs text-slate-300 mt-0.5 leading-relaxed">
               スープ量（{activeResult.params.Soup_mass}kg）、寸胴径（{activeResult.params.Pot_D_mm}mm）、水温（{activeResult.params.TapTemp}℃）条件に基づく月次試算です。
@@ -219,14 +176,13 @@ export const SalesSummaryMode: React.FC<SalesSummaryModeProps> = ({
           <div className="flex items-center justify-between pb-1.5 border-b border-slate-100 mb-1.5">
             <div className="flex items-center space-x-1.5">
               <DollarSign className="w-5 h-5 text-emerald-600 shrink-0" />
-              {/* タイトルの文字サイズを揃えて大きく変更 */}
               <h3 className="font-black text-base sm:text-lg text-slate-900">
                 月あたりのコスト削減シミュレーション
               </h3>
             </div>
             <button
               onClick={() => setShowRoiHelp(!showRoiHelp)}
-              className="text-slate-400 hover:text-slate-600 cursor-pointer p-0.5 no-print"
+              className="text-slate-400 hover:text-slate-600 cursor-pointer p-0.5"
               title="計算根拠の確認"
             >
               <HelpCircle className="w-4 h-4" />
@@ -234,7 +190,7 @@ export const SalesSummaryMode: React.FC<SalesSummaryModeProps> = ({
           </div>
 
           {showRoiHelp && (
-            <div className="mb-2.5 p-2 bg-slate-50 border border-slate-200 rounded-lg text-[11px] text-slate-600 space-y-1 no-print">
+            <div className="mb-2.5 p-2 bg-slate-50 border border-slate-200 rounded-lg text-[11px] text-slate-600 space-y-1">
               <p>
                 <strong>計算条件:</strong> 月稼働 {monthlyDays}日 × 1日 {dailyBatches}回 ＝ 計 {monthlyBatches}回の冷却仕込み。
               </p>
@@ -255,7 +211,6 @@ export const SalesSummaryMode: React.FC<SalesSummaryModeProps> = ({
                 <span className="text-[11px] font-bold text-cyan-800">
                   水道料金の削減額
                 </span>
-                {/* 試算結果の数字を字下げ(pl-2)し、文字を大きく目立たせる */}
                 <div className="mt-1 pl-2 text-2xl sm:text-3xl font-black text-cyan-900 font-mono">
                   ▲{waterSavingsMonth.toLocaleString()}
                   <span className="text-xs sm:text-sm font-bold ml-1 text-cyan-700">円/月</span>
@@ -275,7 +230,6 @@ export const SalesSummaryMode: React.FC<SalesSummaryModeProps> = ({
                 <span className="text-[11px] font-bold text-amber-800">
                   冷却拘束時間の削減
                 </span>
-                {/* 試算結果の数字を字下げ(pl-2)し、文字を大きく目立たせる */}
                 <div className="mt-1 pl-2 text-2xl sm:text-3xl font-black text-amber-900 font-mono">
                   ▲{timeSavingsHoursMonth.toFixed(1)}
                   <span className="text-xs sm:text-sm font-bold ml-1 text-amber-700">時間/月</span>
@@ -297,7 +251,6 @@ export const SalesSummaryMode: React.FC<SalesSummaryModeProps> = ({
                     月間メリット
                   </span>
                 </div>
-                {/* 試算結果の数字を字下げ(pl-2)し、文字を大きく目立たせる */}
                 <div className="mt-1 pl-2 text-2xl sm:text-3xl font-black text-emerald-800 font-mono tracking-tight flex items-baseline">
                   {netSavingsMonth >= 0 ? `+${netSavingsMonth.toLocaleString()}` : `${netSavingsMonth.toLocaleString()}`}
                   <span className="text-xs sm:text-sm font-bold ml-1 text-emerald-950 font-sans">円/月</span>
@@ -330,30 +283,8 @@ export const SalesSummaryMode: React.FC<SalesSummaryModeProps> = ({
           </div>
         </div>
 
-        {/* 印刷時用: 試算条件のスマートな1行表示 ＋ 水実験・Brix注意書き */}
-        <div className="hidden print:block mt-1 pt-1 border-t border-slate-200 text-[9.5px] text-slate-700 font-mono">
-          <div className="flex items-center justify-between">
-            <span className="font-bold font-sans text-slate-900">【お客様の稼働条件・試算前提】</span>
-            <div className="flex items-center space-x-2">
-              <span>1日の仕込み: <strong>{dailyBatches}回</strong></span>
-              <span className="text-slate-300">｜</span>
-              <span>月間営業日数: <strong>{monthlyDays}日</strong></span>
-              <span className="text-slate-300">｜</span>
-              <span>想定月レンタル料: <strong>{monthlyRentalYen.toLocaleString()}円</strong></span>
-              <span className="text-slate-300">｜</span>
-              <span>スタッフ時給換算: <strong>{hourlyWage.toLocaleString()}円</strong></span>
-            </div>
-          </div>
-          <div className="mt-0.5 pt-0.5 border-t border-slate-100 flex items-center justify-between text-[8px] text-slate-500 font-sans leading-tight">
-            <span>※本シミュレーターは水を用いた実験・物理伝熱モデルに基づきます。粘性や固形分（Brix）の高い実スープでは冷却時間が延伸する場合があります。</span>
-            <span className="font-bold text-cyan-800 bg-cyan-50 px-1 py-0.2 rounded border border-cyan-200 shrink-0 whitespace-nowrap">
-              ★濃度・Brix対応モデル開発中
-            </span>
-          </div>
-        </div>
-
-        {/* 画面操作用: 試算条件の入力コントロール (印刷時は非表示) */}
-        <div className="mt-2.5 pt-2 border-t border-slate-200 bg-slate-50/70 -mx-3 -mb-3 sm:-mx-3.5 sm:-mb-3.5 p-2.5 rounded-b-xl no-print">
+        {/* 試算条件の入力コントロール */}
+        <div className="mt-2.5 pt-2 border-t border-slate-200 bg-slate-50/70 -mx-3 -mb-3 sm:-mx-3.5 sm:-mb-3.5 p-2.5 rounded-b-xl">
           <div className="text-[11px] font-bold text-slate-700 mb-1.5 flex items-center justify-between">
             <span>お客様の稼働条件・試算前提:</span>
             <span className="text-[10px] text-slate-500 font-normal">
@@ -428,12 +359,11 @@ export const SalesSummaryMode: React.FC<SalesSummaryModeProps> = ({
         </div>
       </div>
 
-      {/* 3. 1回あたりの冷却時間＆コスト対比 (すべて整数表示) */}
+      {/* 3. 1回あたりの冷却時間＆コスト対比 */}
       <div className="bg-white rounded-xl p-3 sm:p-3.5 border border-slate-200 shadow-xs page-break-inside-avoid">
         <div className="flex items-center justify-between pb-1.5 border-b border-slate-100 mb-1.5">
           <div className="flex items-center space-x-1.5">
             <Timer className="w-5 h-5 text-blue-600 shrink-0" />
-            {/* タイトルの文字サイズを揃えて大きく変更 */}
             <h3 className="font-black text-base sm:text-lg text-slate-900">
               1回あたりの冷却時間＆コスト対比
             </h3>
@@ -445,7 +375,7 @@ export const SalesSummaryMode: React.FC<SalesSummaryModeProps> = ({
 
         {/* 3方式のハイライトカード */}
         <div className="grid grid-cols-1 sm:grid-cols-3 gap-2 sm:gap-2.5">
-          {/* ① QULIYA式 (QULIYA CHILLER) - 推奨・最速・本命 */}
+          {/* ① QULIYA式 (QULIYA CHILLER) */}
           <div className="p-2.5 sm:p-3 rounded-lg border-2 border-cyan-500 bg-gradient-to-b from-white via-cyan-50/40 to-cyan-50/80 flex flex-col justify-between shadow-2xs">
             <div>
               <div className="flex items-center justify-between mb-1 gap-1 pb-1 border-b border-cyan-100">
@@ -460,7 +390,7 @@ export const SalesSummaryMode: React.FC<SalesSummaryModeProps> = ({
                 </span>
               </div>
 
-              {/* 到達時間（整数分） */}
+              {/* 到達時間 */}
               <div className="flex items-baseline space-x-1 mt-0.5">
                 <span className="text-2xl sm:text-3xl font-black text-cyan-950 font-mono">
                   {rotTime}
@@ -481,7 +411,6 @@ export const SalesSummaryMode: React.FC<SalesSummaryModeProps> = ({
                 <span className="whitespace-nowrap">1回あたり水道代:</span>
                 <span className="font-bold text-cyan-800 whitespace-nowrap">{rotCostPerBatch.toLocaleString()} 円</span>
               </div>
-              {/* 改行せず1行に確実に収まる削減表示 */}
               <div className="flex items-center justify-between text-emerald-900 font-bold bg-emerald-50 px-1 py-0.5 rounded border border-emerald-200">
                 <span className="shrink-0 whitespace-nowrap text-slate-700">1回削減:</span>
                 <span className="whitespace-nowrap font-mono">
@@ -489,7 +418,6 @@ export const SalesSummaryMode: React.FC<SalesSummaryModeProps> = ({
                 </span>
               </div>
 
-              {/* 食中毒リスク・HACCP衛生対策（精査・要約版） */}
               <div className="mt-0.5 pt-0.5 border-t border-cyan-200/60 text-[9.5px] font-sans leading-tight">
                 <div className="flex items-center space-x-1 font-bold text-red-600 whitespace-nowrap">
                   <ShieldCheck className="w-3 h-3 text-red-600 shrink-0" />
@@ -517,7 +445,6 @@ export const SalesSummaryMode: React.FC<SalesSummaryModeProps> = ({
                 </span>
               </div>
 
-              {/* 到達時間（整数分） */}
               <div className="flex items-baseline space-x-1 mt-0.5">
                 <span className="text-2xl sm:text-3xl font-black text-slate-800 font-mono">
                   {coilTime}
@@ -538,7 +465,6 @@ export const SalesSummaryMode: React.FC<SalesSummaryModeProps> = ({
                 <span className="whitespace-nowrap">1回あたり水道代:</span>
                 <span className="font-bold text-slate-800 whitespace-nowrap">{coilCostPerBatch.toLocaleString()} 円</span>
               </div>
-              {/* 改行せず1行に確実に収まる削減表示 */}
               <div className="flex items-center justify-between text-amber-900 font-bold bg-amber-50 px-1 py-0.5 rounded border border-amber-200">
                 <span className="shrink-0 whitespace-nowrap text-slate-700">1回削減:</span>
                 <span className="whitespace-nowrap font-mono">
@@ -546,9 +472,8 @@ export const SalesSummaryMode: React.FC<SalesSummaryModeProps> = ({
                 </span>
               </div>
 
-              {/* 衛生・運用上の留意点 */}
               <div className="mt-0.5 pt-0.5 border-t border-amber-200/60 text-[9.5px] font-sans leading-tight">
-                <span className="font-bold text-slate-700 whitespace-nowrap">衛生・運用の留意点</span>
+                <span className="font-bold text-slate-700 whitespace-nowrap">衛生・運用上の留意点</span>
                 <p className="text-[9px] text-slate-500 leading-tight mt-0.5">
                   40分以上要し菌増殖帯に滞留。コイル管の洗浄・衛生管理手間大
                 </p>
@@ -571,7 +496,6 @@ export const SalesSummaryMode: React.FC<SalesSummaryModeProps> = ({
                 </span>
               </div>
 
-              {/* 到達時間（整数分） */}
               <div className="flex items-baseline space-x-1 mt-0.5">
                 <span className="text-2xl sm:text-3xl font-black text-slate-700 font-mono">
                   {sinkTime}
@@ -592,13 +516,11 @@ export const SalesSummaryMode: React.FC<SalesSummaryModeProps> = ({
                 <span className="whitespace-nowrap">1回あたり水道代:</span>
                 <span className="font-bold text-slate-800 whitespace-nowrap">{sinkCostPerBatch.toLocaleString()} 円</span>
               </div>
-              {/* 基準表示（下の空白行を詰める調整） */}
               <div className="flex items-center justify-between text-slate-600 font-bold bg-slate-100 px-1 py-0.5 rounded border border-slate-200">
                 <span className="shrink-0 whitespace-nowrap text-slate-700">1回削減:</span>
                 <span className="whitespace-nowrap">- (従来の基準方式)</span>
               </div>
 
-              {/* 衛生・運用上の留意点 (不要な余白をカット) */}
               <div className="mt-0.5 pt-0.5 border-t border-slate-200 text-[9.5px] font-sans leading-tight">
                 <span className="font-bold text-slate-700 whitespace-nowrap">衛生・運用の留意点</span>
                 <p className="text-[9px] text-slate-500 leading-tight mt-0.5">
@@ -609,7 +531,7 @@ export const SalesSummaryMode: React.FC<SalesSummaryModeProps> = ({
           </div>
         </div>
 
-        {/* なぜ目標30℃冷却が決定的に重要なのか？のワンポイント解説バナー */}
+        {/* ワンポイント解説バナー */}
         <div className="mt-1.5 bg-gradient-to-r from-red-50 via-amber-50/40 to-slate-50 border border-red-200 rounded-lg p-2 text-xs text-slate-700 flex items-start gap-2 shadow-2xs">
           <div className="bg-red-100 text-red-700 p-1 rounded-md shrink-0 mt-0.5">
             <ShieldCheck className="w-3.5 h-3.5" />
