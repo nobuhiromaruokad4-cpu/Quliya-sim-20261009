@@ -41,6 +41,14 @@
     page-break-after: avoid !important;
   }
 
+  /* 印刷時のグラフ横幅最適化（ワイド画面表示時でもはみ出さずきれいな縦横比にフィット） */
+  canvas {
+    max-width: 100% !important;
+    width: 100% !important;
+    height: auto !important;
+    object-fit: contain !important;
+  }
+
   /* 印刷時の適度な余白設定 (改ページ溢れを防止しつつ用紙全体をバランス良く配置) */
   .space-y-3 > :not([hidden]) ~ :not([hidden]) {
     margin-top: 0.35rem !important;
