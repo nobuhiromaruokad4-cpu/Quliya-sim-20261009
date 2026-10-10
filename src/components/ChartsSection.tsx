@@ -381,7 +381,7 @@ export const ChartsSection: React.FC<ChartsSectionProps> = ({
     responsive: true,
     maintainAspectRatio: false,
     layout: {
-      padding: { right: 28, left: 6, top: 8, bottom: 6 },
+      padding: { right: compact ? 45 : 28, left: 6, top: 8, bottom: 6 },
     },
     interaction: {
       mode: 'index',
@@ -406,11 +406,11 @@ export const ChartsSection: React.FC<ChartsSectionProps> = ({
         align: 'center',
         labels: {
           usePointStyle: false,
-          boxWidth: compact ? 16 : 20,
+          boxWidth: compact ? 12 : 20,
           boxHeight: 3,
-          font: { size: compact ? 10.5 : 11, family: 'Inter, sans-serif', weight: 'bold' },
+          font: { size: compact ? 9.5 : 11, family: 'Inter, sans-serif', weight: 'bold' },
           color: '#334155',
-          padding: compact ? 6 : 8,
+          padding: compact ? 4 : 8,
         },
       },
       tooltip: {
@@ -649,21 +649,21 @@ export const ChartsSection: React.FC<ChartsSectionProps> = ({
 
             // バッジサイズ
             const badgeText = `${m.name}: ${Math.round(m.timeTarget)}分`;
-            ctx.font = 'bold 12px Inter, sans-serif';
+            ctx.font = 'bold 11px Inter, sans-serif';
             const txtW = ctx.measureText(badgeText).width;
-            const bW = txtW + 16;
-            const bH = 22;
+            const bW = txtW + 14;
+            const bH = 20;
 
             // 線の上方の空白エリアにバッジを配置
-            const yOffset = 38 + idx * 28;
+            const yOffset = 34 + idx * 26;
             let badgeY = yPixel - yOffset;
             let isAbove = true;
             if (badgeY < chartArea.top + 6) {
-              badgeY = chartArea.top + 6 + idx * 26;
+              badgeY = chartArea.top + 6 + idx * 24;
             }
 
-            // X位置
-            let badgeX = xPixel + (idx === 0 ? -bW / 2 : idx === 1 ? -bW / 2 : 12);
+            // X位置 (右端オーバーフローを自動防止)
+            let badgeX = xPixel + (idx === 0 ? -bW / 2 : idx === 1 ? -bW / 2 : 10);
             if (badgeX < chartArea.left + 4) badgeX = chartArea.left + 4;
             if (badgeX + bW > chartArea.right - 4) badgeX = chartArea.right - bW - 4;
 
@@ -672,7 +672,7 @@ export const ChartsSection: React.FC<ChartsSectionProps> = ({
             ctx.setLineDash([]);
             ctx.lineWidth = 1.4;
             ctx.strokeStyle = m.color;
-            const connectX = Math.max(badgeX + 10, Math.min(badgeX + bW - 10, xPixel));
+            const connectX = Math.max(badgeX + 8, Math.min(badgeX + bW - 8, xPixel));
             const connectY = isAbove ? badgeY + bH : badgeY;
             ctx.moveTo(xPixel, yPixel);
             ctx.lineTo(connectX, connectY);
@@ -680,13 +680,13 @@ export const ChartsSection: React.FC<ChartsSectionProps> = ({
 
             // バッジ背景シャドウ＆ボックス
             ctx.shadowColor = 'rgba(0, 0, 0, 0.16)';
-            ctx.shadowBlur = 8;
+            ctx.shadowBlur = 6;
             ctx.shadowOffsetX = 0;
             ctx.shadowOffsetY = 2;
 
             ctx.fillStyle = '#ffffff';
             ctx.strokeStyle = m.color;
-            ctx.lineWidth = 2.0;
+            ctx.lineWidth = 1.8;
             ctx.beginPath();
             if (ctx.roundRect) {
               ctx.roundRect(badgeX, badgeY, bW, bH, 5);
@@ -705,36 +705,36 @@ export const ChartsSection: React.FC<ChartsSectionProps> = ({
           } else if (m.timeTarget > threeModesMaxTime) {
             // 最大時間を超える場合
             const badgeText = `${m.name}: ${Math.round(m.timeTarget)}分`;
-            ctx.font = 'bold 12px Inter, sans-serif';
+            ctx.font = 'bold 11px Inter, sans-serif';
             const txtW = ctx.measureText(badgeText).width;
-            const bW = txtW + 18;
-            const bH = 24;
+            const bW = txtW + 14;
+            const bH = 22;
 
-            const bX = chartArea.right - bW - 8;
-            const bY = Math.max(chartArea.top + 8, yPixel - 46);
+            const bX = chartArea.right - bW - 4;
+            const bY = Math.max(chartArea.top + 6, yPixel - 42);
 
             ctx.beginPath();
             ctx.setLineDash([3, 2]);
             ctx.lineWidth = 1.5;
             ctx.strokeStyle = m.color;
-            ctx.moveTo(chartArea.right - 20, yPixel);
-            ctx.lineTo(chartArea.right - 20, bY + bH);
+            ctx.moveTo(chartArea.right - 15, yPixel);
+            ctx.lineTo(chartArea.right - 15, bY + bH);
             ctx.stroke();
 
             ctx.beginPath();
             ctx.setLineDash([]);
-            ctx.arc(chartArea.right - 20, yPixel, 4, 0, Math.PI * 2);
+            ctx.arc(chartArea.right - 15, yPixel, 4, 0, Math.PI * 2);
             ctx.fillStyle = m.color;
             ctx.fill();
 
             ctx.shadowColor = 'rgba(0, 0, 0, 0.16)';
-            ctx.shadowBlur = 8;
+            ctx.shadowBlur = 6;
             ctx.shadowOffsetX = 0;
             ctx.shadowOffsetY = 2;
 
             ctx.fillStyle = '#ffffff';
             ctx.strokeStyle = m.color;
-            ctx.lineWidth = 2.2;
+            ctx.lineWidth = 2.0;
             ctx.beginPath();
             if (ctx.roundRect) {
               ctx.roundRect(bX, bY, bW, bH, 5);
@@ -762,7 +762,7 @@ export const ChartsSection: React.FC<ChartsSectionProps> = ({
     responsive: true,
     maintainAspectRatio: false,
     layout: {
-      padding: { right: 28, left: 6, top: 8, bottom: 6 },
+      padding: { right: compact ? 45 : 28, left: 6, top: 8, bottom: 6 },
     },
     interaction: {
       mode: 'index',
@@ -791,11 +791,11 @@ export const ChartsSection: React.FC<ChartsSectionProps> = ({
         align: 'center',
         labels: {
           usePointStyle: false,
-          boxWidth: compact ? 16 : 20,
+          boxWidth: compact ? 12 : 20,
           boxHeight: 3,
-          font: { size: compact ? 10.5 : 11, family: 'Inter, sans-serif', weight: 'bold' },
+          font: { size: compact ? 9.5 : 11, family: 'Inter, sans-serif', weight: 'bold' },
           color: '#334155',
-          padding: compact ? 6 : 8,
+          padding: compact ? 4 : 8,
         },
       },
       tooltip: {
@@ -907,7 +907,7 @@ export const ChartsSection: React.FC<ChartsSectionProps> = ({
     responsive: true,
     maintainAspectRatio: false,
     layout: {
-      padding: { right: 28, left: 6, top: 8, bottom: 6 },
+      padding: { right: compact ? 42 : 28, left: 6, top: 8, bottom: 6 },
     },
     interaction: {
       mode: 'index',
@@ -938,11 +938,11 @@ export const ChartsSection: React.FC<ChartsSectionProps> = ({
         align: 'center',
         labels: {
           usePointStyle: false,
-          boxWidth: compact ? 16 : 20,
+          boxWidth: compact ? 12 : 20,
           boxHeight: 3,
-          font: { size: compact ? 10.5 : 11, family: 'Inter, sans-serif', weight: 'bold' },
+          font: { size: compact ? 9.5 : 11, family: 'Inter, sans-serif', weight: 'bold' },
           color: '#334155',
-          padding: compact ? 6 : 8,
+          padding: compact ? 4 : 8,
         },
       },
       tooltip: {
