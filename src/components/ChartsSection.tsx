@@ -381,7 +381,7 @@ export const ChartsSection: React.FC<ChartsSectionProps> = ({
     responsive: true,
     maintainAspectRatio: false,
     layout: {
-      padding: { right: compact ? 45 : 28, left: 6, top: 8, bottom: 6 },
+      padding: { right: compact ? 45 : 28, left: 6, top: 12, bottom: 6 },
     },
     interaction: {
       mode: 'index',
@@ -401,16 +401,16 @@ export const ChartsSection: React.FC<ChartsSectionProps> = ({
     },
     plugins: {
       legend: {
-        display: true,
+        display: !compact, // 提案書モード（compact）時は凡例非表示にしてエリア拡大
         position: 'top',
         align: 'center',
         labels: {
           usePointStyle: false,
-          boxWidth: compact ? 12 : 20,
+          boxWidth: 16,
           boxHeight: 3,
-          font: { size: compact ? 9.5 : 11, family: 'Inter, sans-serif', weight: 'bold' },
+          font: { size: 10.5, family: 'Inter, sans-serif', weight: 'bold' },
           color: '#334155',
-          padding: compact ? 4 : 8,
+          padding: 8,
         },
       },
       tooltip: {
@@ -662,10 +662,14 @@ export const ChartsSection: React.FC<ChartsSectionProps> = ({
               badgeY = chartArea.top + 6 + idx * 24;
             }
 
-            // X位置 (右端オーバーフローを自動防止)
-            let badgeX = xPixel + (idx === 0 ? -bW / 2 : idx === 1 ? -bW / 2 : 10);
-            if (badgeX < chartArea.left + 4) badgeX = chartArea.left + 4;
-            if (badgeX + bW > chartArea.right - 4) badgeX = chartArea.right - bW - 4;
+            // X位置 (右端オーバーフローを自動防止：壁に当たったら左側に反転配置)
+            let badgeX = xPixel + (idx === 0 ? -bW / 2 : idx === 1 ? -bW / 2 : 8);
+            if (badgeX + bW > chartArea.right - 4) {
+              badgeX = xPixel - bW - 8;
+            }
+            if (badgeX < chartArea.left + 4) {
+              badgeX = chartArea.left + 4;
+            }
 
             // 引き出し線
             ctx.beginPath();
@@ -762,7 +766,7 @@ export const ChartsSection: React.FC<ChartsSectionProps> = ({
     responsive: true,
     maintainAspectRatio: false,
     layout: {
-      padding: { right: compact ? 45 : 28, left: 6, top: 8, bottom: 6 },
+      padding: { right: compact ? 30 : 28, left: 6, top: 12, bottom: 6 },
     },
     interaction: {
       mode: 'index',
@@ -786,17 +790,7 @@ export const ChartsSection: React.FC<ChartsSectionProps> = ({
     },
     plugins: {
       legend: {
-        display: true,
-        position: 'top',
-        align: 'center',
-        labels: {
-          usePointStyle: false,
-          boxWidth: compact ? 12 : 20,
-          boxHeight: 3,
-          font: { size: compact ? 9.5 : 11, family: 'Inter, sans-serif', weight: 'bold' },
-          color: '#334155',
-          padding: compact ? 4 : 8,
-        },
+        display: false, // 図中に記載があるため上部凡例（レジェンド）を非表示
       },
       tooltip: {
         enabled: false,
@@ -907,7 +901,7 @@ export const ChartsSection: React.FC<ChartsSectionProps> = ({
     responsive: true,
     maintainAspectRatio: false,
     layout: {
-      padding: { right: compact ? 42 : 28, left: 6, top: 8, bottom: 6 },
+      padding: { right: compact ? 30 : 28, left: 6, top: 12, bottom: 6 },
     },
     interaction: {
       mode: 'index',
@@ -933,16 +927,16 @@ export const ChartsSection: React.FC<ChartsSectionProps> = ({
     },
     plugins: {
       legend: {
-        display: true,
+        display: !compact,
         position: 'top',
         align: 'center',
         labels: {
           usePointStyle: false,
-          boxWidth: compact ? 12 : 20,
+          boxWidth: 16,
           boxHeight: 3,
-          font: { size: compact ? 9.5 : 11, family: 'Inter, sans-serif', weight: 'bold' },
+          font: { size: 10.5, family: 'Inter, sans-serif', weight: 'bold' },
           color: '#334155',
-          padding: compact ? 4 : 8,
+          padding: 8,
         },
       },
       tooltip: {
