@@ -98,7 +98,7 @@ export const Header: React.FC<HeaderProps> = ({
             <div className="hidden sm:flex flex-col justify-center">
               <div className="flex items-center space-x-2">
                 <span className="font-bold text-sm sm:text-base tracking-tight text-white leading-tight">
-                  スープチラー急速冷却シミュレーター
+                  スープ冷却シミュレーター
                 </span>
               </div>
               <span className="text-[10px] text-slate-400 font-mono tracking-tight leading-tight mt-0.5">

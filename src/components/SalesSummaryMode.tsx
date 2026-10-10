@@ -118,18 +118,18 @@ export const SalesSummaryMode: React.FC<SalesSummaryModeProps> = ({
   };
 
   return (
-    <div className="space-y-2.5 print:space-y-2.5">
+    <div className="space-y-2.5">
       {/* 印刷時のみ最上部に表示される「正式提案書ヘッダー」 */}
       <div className="hidden print:block border-b-2 border-slate-900 pb-1.5 mb-2">
         <div className="flex items-center justify-between">
           <div className="flex items-center space-x-2">
-            <span className="font-extrabold text-sm tracking-tight text-slate-900 print:text-[15.5px]">
+            <span className="font-extrabold text-sm tracking-tight text-slate-900">
               {customerName.trim()
                 ? `${customerName.trim().replace(/(様|御中)$/, '').trim()} 様向け QULIYA CHILLER 導入効果試算書`
                 : 'お客様向け QULIYA CHILLER 導入効果試算書'}
             </span>
           </div>
-          <div className="text-right text-[9.5px] text-slate-600 font-mono leading-tight print:text-[10.5px]">
+          <div className="text-right text-[9.5px] text-slate-600 font-mono leading-tight">
             作成日: {todayStr}
           </div>
         </div>
@@ -138,8 +138,8 @@ export const SalesSummaryMode: React.FC<SalesSummaryModeProps> = ({
         {(customerName || salesRepName) && (
           <div className="mt-1 flex items-center justify-between text-xs bg-slate-50 px-3 py-1 rounded border border-slate-200">
             <div>
-              <span className="text-[9px] text-slate-500 print:text-[10px]">ご提案先:</span>{' '}
-              <strong className="text-xs text-slate-900 print:text-[13px]">
+              <span className="text-[9px] text-slate-500">ご提案先:</span>{' '}
+              <strong className="text-xs text-slate-900">
                 {customerName
                   ? customerName.endsWith('様') || customerName.endsWith('御中')
                     ? customerName
@@ -148,7 +148,7 @@ export const SalesSummaryMode: React.FC<SalesSummaryModeProps> = ({
               </strong>
             </div>
             {salesRepName && (
-              <div className="text-[9px] text-slate-700 print:text-[10px]">
+              <div className="text-[9px] text-slate-700">
                 担当営業: <strong className="print:text-[11.5px]">{salesRepName}</strong>
               </div>
             )}
@@ -166,7 +166,7 @@ export const SalesSummaryMode: React.FC<SalesSummaryModeProps> = ({
             <p className="text-xs text-slate-300 mt-0.5 leading-relaxed">
               スープ量（{activeResult.params.Soup_mass}kg）、寸胴径（{activeResult.params.Pot_D_mm}mm）、水温（{activeResult.params.TapTemp}℃）条件に基づく月次試算です。
               <br />
-              <span className="text-cyan-300 block sm:inline">
+              <span className="text-cyan-300 block sm:inline pl-2">
                 ※水実験モデル準拠（実スープは粘性・Brixにより冷却時間が延伸します／Brix対応モデル開発中）。
               </span>
             </p>
@@ -214,14 +214,14 @@ export const SalesSummaryMode: React.FC<SalesSummaryModeProps> = ({
       </div>
 
       {/* 2. メインハイライト: 月あたりのコスト削減と回収インパクト */}
-      <div className="bg-white rounded-xl p-3 sm:p-3.5 border border-slate-200 shadow-xs page-break-inside-avoid print:p-2 print:rounded-lg">
+      <div className="bg-white rounded-xl p-3 sm:p-3.5 border border-slate-200 shadow-xs page-break-inside-avoid">
         <div>
-          <div className="flex items-center justify-between pb-1.5 border-b border-slate-100 mb-1.5 print:mb-1">
+          <div className="flex items-center justify-between pb-1.5 border-b border-slate-100 mb-1.5">
             <div className="flex items-center space-x-1.5">
-              <DollarSign className="w-5 h-5 text-emerald-600 print:w-4 print:h-4 shrink-0" />
+              <DollarSign className="w-5 h-5 text-emerald-600 shrink-0" />
               {/* タイトルの文字サイズを揃えて大きく変更 */}
-              <h3 className="font-black text-base sm:text-lg text-slate-900 print:text-sm">
-                月あたりのコスト削減シミュレーション（月額レンタル対比）
+              <h3 className="font-black text-base sm:text-lg text-slate-900">
+                月あたりのコスト削減シミュレーション
               </h3>
             </div>
             <button
@@ -236,7 +236,7 @@ export const SalesSummaryMode: React.FC<SalesSummaryModeProps> = ({
           {showRoiHelp && (
             <div className="mb-2.5 p-2 bg-slate-50 border border-slate-200 rounded-lg text-[11px] text-slate-600 space-y-1 no-print">
               <p>
-                <strong>計算前提:</strong> 月稼働 {monthlyDays}日 × 1日 {dailyBatches}回 ＝ 計 {monthlyBatches}回の冷却仕込み。
+                <strong>計算条件:</strong> 月稼働 {monthlyDays}日 × 1日 {dailyBatches}回 ＝ 計 {monthlyBatches}回の冷却仕込み。
               </p>
               <p>
                 ・<strong>水道代削減:</strong> 1回あたり削減 {(sinkWater - rotWater).toLocaleString()}L × 水道料金単価 {activeResult.params.waterCostPerM3 ?? 500}円/m³ (上下水合計)。
@@ -248,20 +248,20 @@ export const SalesSummaryMode: React.FC<SalesSummaryModeProps> = ({
           )}
 
           {/* 3つの比較数値カード */}
-          <div className="grid grid-cols-1 sm:grid-cols-3 gap-2 sm:gap-2.5 mb-1.5 print:grid-cols-3 print:gap-1.5 print:mb-1">
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-2 sm:gap-2.5 mb-1.5">
             {/* ① 水道代削減 */}
-            <div className="p-2.5 sm:p-3 rounded-lg border border-cyan-200 bg-cyan-50/60 flex flex-col justify-between print:p-1.5">
+            <div className="p-2.5 sm:p-3 rounded-lg border border-cyan-200 bg-cyan-50/60 flex flex-col justify-between">
               <div>
-                <span className="text-[11px] font-bold text-cyan-800 print:text-[10px]">
+                <span className="text-[11px] font-bold text-cyan-800">
                   水道料金の削減額
                 </span>
                 {/* 試算結果の数字を字下げ(pl-2)し、文字を大きく目立たせる */}
-                <div className="mt-1 pl-2 text-2xl sm:text-3xl font-black text-cyan-900 font-mono print:text-xl">
+                <div className="mt-1 pl-2 text-2xl sm:text-3xl font-black text-cyan-900 font-mono">
                   ▲{waterSavingsMonth.toLocaleString()}
-                  <span className="text-xs sm:text-sm font-bold ml-1 text-cyan-700 print:text-[11px]">円/月</span>
+                  <span className="text-xs sm:text-sm font-bold ml-1 text-cyan-700">円/月</span>
                 </div>
               </div>
-              <div className="mt-1 text-[10px] text-cyan-700 border-t border-cyan-200/80 pt-0.5 flex items-center justify-between print:text-[9px] print:pt-0.5">
+              <div className="mt-1 text-[10px] text-cyan-700 border-t border-cyan-200/80 pt-0.5 flex items-center justify-between">
                 <span>月間水削減量:</span>
                 <span className="font-mono font-bold">
                   {((sinkWater - rotWater) * monthlyBatches).toLocaleString()} L
@@ -270,18 +270,18 @@ export const SalesSummaryMode: React.FC<SalesSummaryModeProps> = ({
             </div>
 
             {/* ② 時短・人件費相当 */}
-            <div className="p-2.5 sm:p-3 rounded-lg border border-amber-200 bg-amber-50/60 flex flex-col justify-between print:p-1.5">
+            <div className="p-2.5 sm:p-3 rounded-lg border border-amber-200 bg-amber-50/60 flex flex-col justify-between">
               <div>
-                <span className="text-[11px] font-bold text-amber-800 print:text-[10px]">
+                <span className="text-[11px] font-bold text-amber-800">
                   冷却拘束時間の削減
                 </span>
                 {/* 試算結果の数字を字下げ(pl-2)し、文字を大きく目立たせる */}
-                <div className="mt-1 pl-2 text-2xl sm:text-3xl font-black text-amber-900 font-mono print:text-xl">
+                <div className="mt-1 pl-2 text-2xl sm:text-3xl font-black text-amber-900 font-mono">
                   ▲{timeSavingsHoursMonth.toFixed(1)}
-                  <span className="text-xs sm:text-sm font-bold ml-1 text-amber-700 print:text-[11px]">時間/月</span>
+                  <span className="text-xs sm:text-sm font-bold ml-1 text-amber-700">時間/月</span>
                 </div>
               </div>
-              <div className="mt-1 text-[10px] text-amber-700 border-t border-amber-200/80 pt-0.5 flex items-center justify-between print:text-[9px] print:pt-0.5">
+              <div className="mt-1 text-[10px] text-amber-700 border-t border-amber-200/80 pt-0.5 flex items-center justify-between">
                 <span>人件費換算:</span>
                 <span className="font-mono font-bold">
                   約{laborSavingsMonth.toLocaleString()} 円相当
@@ -290,21 +290,21 @@ export const SalesSummaryMode: React.FC<SalesSummaryModeProps> = ({
             </div>
 
             {/* ③ 純手残りメリット */}
-            <div className="p-2.5 sm:p-3 rounded-lg border-2 border-emerald-500 bg-gradient-to-br from-emerald-50 via-white to-emerald-100/70 flex flex-col justify-between shadow-2xs print:p-1.5 print:border-emerald-600">
+            <div className="p-2.5 sm:p-3 rounded-lg border-2 border-emerald-500 bg-gradient-to-br from-emerald-50 via-white to-emerald-100/70 flex flex-col justify-between shadow-2xs">
               <div>
                 <div className="flex items-center justify-between">
-                  <span className="text-[11px] font-black text-emerald-900 flex items-center gap-1 print:text-[10px]">
+                  <span className="text-[11px] font-black text-emerald-900 flex items-center gap-1">
                     月間メリット
                   </span>
                 </div>
                 {/* 試算結果の数字を字下げ(pl-2)し、文字を大きく目立たせる */}
-                <div className="mt-1 pl-2 text-2xl sm:text-3xl font-black text-emerald-800 font-mono tracking-tight flex items-baseline print:text-xl">
+                <div className="mt-1 pl-2 text-2xl sm:text-3xl font-black text-emerald-800 font-mono tracking-tight flex items-baseline">
                   {netSavingsMonth >= 0 ? `+${netSavingsMonth.toLocaleString()}` : `${netSavingsMonth.toLocaleString()}`}
-                  <span className="text-xs sm:text-sm font-bold ml-1 text-emerald-950 font-sans print:text-[11px]">円/月</span>
+                  <span className="text-xs sm:text-sm font-bold ml-1 text-emerald-950 font-sans">円/月</span>
                 </div>
               </div>
-              <div className="mt-1 text-[10px] text-emerald-900 border-t border-emerald-300/80 pt-0.5 print:text-[9px] print:pt-0.5">
-                <div className="text-[9.5px] text-emerald-800 font-bold print:text-[8.5px] leading-tight text-center sm:text-left">
+              <div className="mt-1 text-[10px] text-emerald-900 border-t border-emerald-300/80 pt-0.5">
+                <div className="text-[9.5px] text-emerald-800 font-bold leading-tight text-center sm:text-left">
                   水道削減効果＋人件費削減効果ーレンタル費
                 </div>
               </div>
@@ -312,11 +312,11 @@ export const SalesSummaryMode: React.FC<SalesSummaryModeProps> = ({
           </div>
 
           {/* 年間換算バー */}
-          <div className="bg-slate-900 text-white rounded-lg px-2.5 py-1.5 flex flex-wrap items-center justify-between gap-1 text-xs print:py-1 print:px-2 print:text-[10px] print:rounded">
+          <div className="bg-slate-900 text-white rounded-lg px-2.5 py-1.5 flex flex-wrap items-center justify-between gap-1 text-xs">
             <span className="text-slate-300 font-medium">
               年間インパクト（×12ヶ月換算）:
             </span>
-            <div className="flex items-center space-x-2.5 font-mono font-bold print:space-x-2">
+            <div className="flex items-center space-x-2.5 font-mono font-bold">
               <span className="text-cyan-300">
                 水道代 年間 ▲{(waterSavingsMonth * 12).toLocaleString()}円
               </span>
@@ -428,51 +428,51 @@ export const SalesSummaryMode: React.FC<SalesSummaryModeProps> = ({
         </div>
       </div>
 
-      {/* 3. 1回あたりの冷却スピード＆コスト対比 (すべて整数表示) */}
-      <div className="bg-white rounded-xl p-3 sm:p-3.5 border border-slate-200 shadow-xs page-break-inside-avoid print:p-2 print:rounded-lg">
-        <div className="flex items-center justify-between pb-1.5 border-b border-slate-100 mb-1.5 print:mb-1">
+      {/* 3. 1回あたりの冷却時間＆コスト対比 (すべて整数表示) */}
+      <div className="bg-white rounded-xl p-3 sm:p-3.5 border border-slate-200 shadow-xs page-break-inside-avoid">
+        <div className="flex items-center justify-between pb-1.5 border-b border-slate-100 mb-1.5">
           <div className="flex items-center space-x-1.5">
-            <Timer className="w-5 h-5 text-blue-600 print:w-4 print:h-4 shrink-0" />
+            <Timer className="w-5 h-5 text-blue-600 shrink-0" />
             {/* タイトルの文字サイズを揃えて大きく変更 */}
-            <h3 className="font-black text-base sm:text-lg text-slate-900 print:text-sm">
-              1回あたりの冷却スピード＆コスト対比
+            <h3 className="font-black text-base sm:text-lg text-slate-900">
+              1回あたりの冷却時間＆コスト対比
             </h3>
           </div>
-          <span className="text-[10px] text-slate-500 font-mono print:text-[9px]">
+          <span className="text-[10px] text-slate-500 font-mono">
             目標温度 {targetTemp}℃ 到達時（1仕込みあたり）
           </span>
         </div>
 
         {/* 3方式のハイライトカード */}
-        <div className="grid grid-cols-1 sm:grid-cols-3 gap-2 sm:gap-2.5 print:grid-cols-3 print:gap-1.5">
+        <div className="grid grid-cols-1 sm:grid-cols-3 gap-2 sm:gap-2.5">
           {/* ① QULIYA式 (QULIYA CHILLER) - 推奨・最速・本命 */}
-          <div className="p-2.5 sm:p-3 rounded-lg border-2 border-cyan-500 bg-gradient-to-b from-white via-cyan-50/40 to-cyan-50/80 flex flex-col justify-between shadow-2xs print:p-1.5 print:border-cyan-600">
+          <div className="p-2.5 sm:p-3 rounded-lg border-2 border-cyan-500 bg-gradient-to-b from-white via-cyan-50/40 to-cyan-50/80 flex flex-col justify-between shadow-2xs">
             <div>
               <div className="flex items-center justify-between mb-1 gap-1 pb-1 border-b border-cyan-100">
                 <div className="flex items-center space-x-1 min-w-0">
                   <span className="w-1.5 h-1.5 rounded-full bg-cyan-600 shrink-0"></span>
-                  <span className="text-xs font-black text-cyan-950 whitespace-nowrap print:text-[11px]">
+                  <span className="text-xs font-black text-cyan-950 whitespace-nowrap">
                     QULIYA式
                   </span>
                 </div>
-                <span className="bg-cyan-600 text-white text-[9px] font-bold px-1.5 py-0.2 rounded shadow-2xs shrink-0 whitespace-nowrap print:text-[8px] print:px-1">
+                <span className="bg-cyan-600 text-white text-[9px] font-bold px-1.5 py-0.2 rounded shadow-2xs shrink-0 whitespace-nowrap">
                   回転冷却（特許）
                 </span>
               </div>
 
               {/* 到達時間（整数分） */}
               <div className="flex items-baseline space-x-1 mt-0.5">
-                <span className="text-2xl sm:text-3xl font-black text-cyan-950 font-mono print:text-2xl">
+                <span className="text-2xl sm:text-3xl font-black text-cyan-950 font-mono">
                   {rotTime}
                 </span>
-                <span className="text-xs font-bold text-cyan-700 print:text-[10px]">分</span>
-                <span className="ml-2 text-[10px] font-bold text-emerald-800 bg-emerald-100 border border-emerald-200 px-1.5 py-0.2 rounded font-mono print:text-[8.5px]">
+                <span className="text-xs font-bold text-cyan-700">分</span>
+                <span className="ml-2 text-[10px] font-bold text-emerald-800 bg-emerald-100 border border-emerald-200 px-1.5 py-0.2 rounded font-mono">
                   約{rotSpeedRatio}倍速
                 </span>
               </div>
             </div>
 
-            <div className="mt-1 pt-1 border-t border-cyan-200/90 space-y-0.5 text-[11px] font-mono print:text-[9.5px]">
+            <div className="mt-1 pt-1 border-t border-cyan-200/90 space-y-0.5 text-[11px] font-mono">
               <div className="flex items-center justify-between text-slate-600">
                 <span className="whitespace-nowrap">水道使用量:</span>
                 <span className="font-bold text-slate-900 whitespace-nowrap">{rotWater} L</span>
@@ -482,7 +482,7 @@ export const SalesSummaryMode: React.FC<SalesSummaryModeProps> = ({
                 <span className="font-bold text-cyan-800 whitespace-nowrap">{rotCostPerBatch.toLocaleString()} 円</span>
               </div>
               {/* 改行せず1行に確実に収まる削減表示 */}
-              <div className="flex items-center justify-between text-emerald-900 font-bold bg-emerald-50 px-1 py-0.5 rounded border border-emerald-200 print:text-[8.5px] print:py-0.2">
+              <div className="flex items-center justify-between text-emerald-900 font-bold bg-emerald-50 px-1 py-0.5 rounded border border-emerald-200">
                 <span className="shrink-0 whitespace-nowrap text-slate-700">1回削減:</span>
                 <span className="whitespace-nowrap font-mono">
                   水道▲{waterSavingsPerBatch.toLocaleString()}円 ｜ 時短▲{timeSavingsMinPerBatch}分
@@ -490,12 +490,12 @@ export const SalesSummaryMode: React.FC<SalesSummaryModeProps> = ({
               </div>
 
               {/* 食中毒リスク・HACCP衛生対策（精査・要約版） */}
-              <div className="mt-0.5 pt-0.5 border-t border-cyan-200/60 text-[9.5px] font-sans leading-tight print:text-[8.5px]">
+              <div className="mt-0.5 pt-0.5 border-t border-cyan-200/60 text-[9.5px] font-sans leading-tight">
                 <div className="flex items-center space-x-1 font-bold text-red-600 whitespace-nowrap">
-                  <ShieldCheck className="w-3 h-3 text-red-600 shrink-0 print:w-2.5 print:h-2.5" />
+                  <ShieldCheck className="w-3 h-3 text-red-600 shrink-0" />
                   <span>至適増殖温度帯（35〜40℃）を急速冷却</span>
                 </div>
-                <p className="text-[9px] text-slate-600 leading-tight mt-0.5 print:text-[8px]">
+                <p className="text-[9px] text-slate-600 leading-tight mt-0.5">
                   菌の増殖ピーク帯を速やかに通過し、冷蔵庫での早期補完が可能
                 </p>
               </div>
@@ -503,33 +503,33 @@ export const SalesSummaryMode: React.FC<SalesSummaryModeProps> = ({
           </div>
 
           {/* ② 冷却コイル式 */}
-          <div className="p-2.5 sm:p-3 rounded-lg border border-amber-300 bg-amber-50/40 flex flex-col justify-between print:p-1.5">
+          <div className="p-2.5 sm:p-3 rounded-lg border border-amber-300 bg-amber-50/40 flex flex-col justify-between">
             <div>
               <div className="flex items-center justify-between mb-1 pb-1 border-b border-amber-200/60">
                 <div className="flex items-center space-x-1">
                   <span className="w-1.5 h-1.5 rounded-full bg-amber-500 shrink-0"></span>
-                  <span className="text-xs font-bold text-slate-800 whitespace-nowrap print:text-[11px]">
+                  <span className="text-xs font-bold text-slate-800 whitespace-nowrap">
                     冷却コイル式
                   </span>
                 </div>
-                <span className="text-[9px] text-amber-800 bg-amber-100 px-1 py-0.2 rounded font-sans shrink-0 whitespace-nowrap print:text-[8px] print:px-1">
+                <span className="text-[9px] text-amber-800 bg-amber-100 px-1 py-0.2 rounded font-sans shrink-0 whitespace-nowrap">
                   据置浸漬
                 </span>
               </div>
 
               {/* 到達時間（整数分） */}
               <div className="flex items-baseline space-x-1 mt-0.5">
-                <span className="text-2xl sm:text-3xl font-black text-slate-800 font-mono print:text-2xl">
+                <span className="text-2xl sm:text-3xl font-black text-slate-800 font-mono">
                   {coilTime}
                 </span>
-                <span className="text-xs font-bold text-slate-600 print:text-[10px]">分</span>
-                <span className="ml-2 text-[10px] font-bold text-amber-800 bg-amber-100 px-1.5 py-0.2 rounded font-mono print:text-[8.5px]">
+                <span className="text-xs font-bold text-slate-600">分</span>
+                <span className="ml-2 text-[10px] font-bold text-amber-800 bg-amber-100 px-1.5 py-0.2 rounded font-mono">
                   約{coilSpeedRatio}倍速
                 </span>
               </div>
             </div>
 
-            <div className="mt-1 pt-1 border-t border-amber-200/80 space-y-0.5 text-[11px] font-mono print:text-[9.5px]">
+            <div className="mt-1 pt-1 border-t border-amber-200/80 space-y-0.5 text-[11px] font-mono">
               <div className="flex items-center justify-between text-slate-600">
                 <span className="whitespace-nowrap">水道使用量:</span>
                 <span className="font-bold text-slate-900 whitespace-nowrap">{coilWater} L</span>
@@ -539,7 +539,7 @@ export const SalesSummaryMode: React.FC<SalesSummaryModeProps> = ({
                 <span className="font-bold text-slate-800 whitespace-nowrap">{coilCostPerBatch.toLocaleString()} 円</span>
               </div>
               {/* 改行せず1行に確実に収まる削減表示 */}
-              <div className="flex items-center justify-between text-amber-900 font-bold bg-amber-50 px-1 py-0.5 rounded border border-amber-200 print:text-[8.5px] print:py-0.2">
+              <div className="flex items-center justify-between text-amber-900 font-bold bg-amber-50 px-1 py-0.5 rounded border border-amber-200">
                 <span className="shrink-0 whitespace-nowrap text-slate-700">1回削減:</span>
                 <span className="whitespace-nowrap font-mono">
                   水道▲{Math.max(0, sinkCostPerBatch - coilCostPerBatch).toLocaleString()}円 ｜ 時短▲{Math.max(0, sinkTime - coilTime)}分
@@ -547,9 +547,9 @@ export const SalesSummaryMode: React.FC<SalesSummaryModeProps> = ({
               </div>
 
               {/* 衛生・運用上の留意点 */}
-              <div className="mt-0.5 pt-0.5 border-t border-amber-200/60 text-[9.5px] font-sans leading-tight print:text-[8.5px]">
+              <div className="mt-0.5 pt-0.5 border-t border-amber-200/60 text-[9.5px] font-sans leading-tight">
                 <span className="font-bold text-slate-700 whitespace-nowrap">衛生・運用の留意点</span>
-                <p className="text-[9px] text-slate-500 leading-tight mt-0.5 print:text-[8px]">
+                <p className="text-[9px] text-slate-500 leading-tight mt-0.5">
                   40分以上要し菌増殖帯に滞留。コイル管の洗浄・衛生管理手間大
                 </p>
               </div>
@@ -557,33 +557,33 @@ export const SalesSummaryMode: React.FC<SalesSummaryModeProps> = ({
           </div>
 
           {/* ③ シンク流水（自然冷却） */}
-          <div className="p-2.5 sm:p-3 rounded-lg border border-slate-300 bg-slate-50/60 flex flex-col justify-between print:p-1.5">
+          <div className="p-2.5 sm:p-3 rounded-lg border border-slate-300 bg-slate-50/60 flex flex-col justify-between">
             <div>
               <div className="flex items-center justify-between mb-1 pb-1 border-b border-slate-200">
                 <div className="flex items-center space-x-1">
                   <span className="w-1.5 h-1.5 rounded-full bg-emerald-600 shrink-0"></span>
-                  <span className="text-xs font-bold text-slate-800 whitespace-nowrap print:text-[11px]">
+                  <span className="text-xs font-bold text-slate-800 whitespace-nowrap">
                     シンク流水式
                   </span>
                 </div>
-                <span className="text-[9px] text-slate-600 bg-slate-200 px-1 py-0.2 rounded font-sans shrink-0 whitespace-nowrap print:text-[8px] print:px-1">
+                <span className="text-[9px] text-slate-600 bg-slate-200 px-1 py-0.2 rounded font-sans shrink-0 whitespace-nowrap">
                   自然放置
                 </span>
               </div>
 
               {/* 到達時間（整数分） */}
               <div className="flex items-baseline space-x-1 mt-0.5">
-                <span className="text-2xl sm:text-3xl font-black text-slate-700 font-mono print:text-2xl">
+                <span className="text-2xl sm:text-3xl font-black text-slate-700 font-mono">
                   {sinkTime}
                 </span>
-                <span className="text-xs font-bold text-slate-600 print:text-[10px]">分</span>
-                <span className="ml-2 text-[10px] font-bold text-slate-600 bg-slate-200 px-1.5 py-0.2 rounded font-mono print:text-[8.5px]">
+                <span className="text-xs font-bold text-slate-600">分</span>
+                <span className="ml-2 text-[10px] font-bold text-slate-600 bg-slate-200 px-1.5 py-0.2 rounded font-mono">
                   基準 (1/1)
                 </span>
               </div>
             </div>
 
-            <div className="mt-1 pt-1 border-t border-slate-200 space-y-0.5 text-[11px] font-mono print:text-[9.5px]">
+            <div className="mt-1 pt-1 border-t border-slate-200 space-y-0.5 text-[11px] font-mono">
               <div className="flex items-center justify-between text-slate-600">
                 <span className="whitespace-nowrap">水道使用量:</span>
                 <span className="font-bold text-slate-900 whitespace-nowrap">{sinkWater} L</span>
@@ -593,15 +593,15 @@ export const SalesSummaryMode: React.FC<SalesSummaryModeProps> = ({
                 <span className="font-bold text-slate-800 whitespace-nowrap">{sinkCostPerBatch.toLocaleString()} 円</span>
               </div>
               {/* 基準表示（下の空白行を詰める調整） */}
-              <div className="flex items-center justify-between text-slate-600 font-bold bg-slate-100 px-1 py-0.5 rounded border border-slate-200 print:text-[8.5px] print:py-0.2">
+              <div className="flex items-center justify-between text-slate-600 font-bold bg-slate-100 px-1 py-0.5 rounded border border-slate-200">
                 <span className="shrink-0 whitespace-nowrap text-slate-700">1回削減:</span>
                 <span className="whitespace-nowrap">- (従来の基準方式)</span>
               </div>
 
               {/* 衛生・運用上の留意点 (不要な余白をカット) */}
-              <div className="mt-0.5 pt-0.5 border-t border-slate-200 text-[9.5px] font-sans leading-tight print:text-[8.5px]">
+              <div className="mt-0.5 pt-0.5 border-t border-slate-200 text-[9.5px] font-sans leading-tight">
                 <span className="font-bold text-slate-700 whitespace-nowrap">衛生・運用の留意点</span>
-                <p className="text-[9px] text-slate-500 leading-tight mt-0.5 print:text-[8px]">
+                <p className="text-[9px] text-slate-500 leading-tight mt-0.5">
                   約1.5時間流水放置。菌増殖リスク最大・水道水を大量浪費
                 </p>
               </div>
@@ -610,18 +610,18 @@ export const SalesSummaryMode: React.FC<SalesSummaryModeProps> = ({
         </div>
 
         {/* なぜ目標30℃冷却が決定的に重要なのか？のワンポイント解説バナー */}
-        <div className="mt-1.5 bg-gradient-to-r from-red-50 via-amber-50/40 to-slate-50 border border-red-200 rounded-lg p-2 text-xs text-slate-700 flex items-start gap-2 shadow-2xs print:mt-1 print:p-1.5 print:border-red-300">
-          <div className="bg-red-100 text-red-700 p-1 rounded-md shrink-0 mt-0.5 print:p-0.5">
-            <ShieldCheck className="w-3.5 h-3.5 print:w-3 print:h-3" />
+        <div className="mt-1.5 bg-gradient-to-r from-red-50 via-amber-50/40 to-slate-50 border border-red-200 rounded-lg p-2 text-xs text-slate-700 flex items-start gap-2 shadow-2xs">
+          <div className="bg-red-100 text-red-700 p-1 rounded-md shrink-0 mt-0.5">
+            <ShieldCheck className="w-3.5 h-3.5" />
           </div>
           <div className="space-y-0.5 leading-snug">
-            <div className="flex flex-wrap items-center gap-1.5 font-bold text-slate-900 text-[11px] print:text-[9.5px]">
+            <div className="flex flex-wrap items-center gap-1.5 font-bold text-slate-900 text-[11px]">
               <span className="text-red-700">💡 なぜ「30℃」への急速冷却が重要なのか？</span>
-              <span className="text-[10px] bg-red-100 text-red-800 px-1.5 py-0.2 rounded font-normal print:text-[8.5px]">
+              <span className="text-[10px] bg-red-100 text-red-800 px-1.5 py-0.2 rounded font-normal">
                 食中毒菌（中温菌）の増殖至適温度：35℃〜40℃
               </span>
             </div>
-            <p className="text-[10px] text-slate-600 leading-normal print:text-[8.5px] print:leading-snug">
+            <p className="text-[10px] text-slate-600 leading-normal">
               食中毒菌（中温菌）は35℃〜40℃（至適増殖温度帯）で最も活発に増殖します。寸胴鍋を常温放置するとこの温度帯に1時間以上滞留してしまいますが、QULIYA式チラーで30℃以下まで速やかに冷却することで増殖リスクを低減し、冷蔵庫の庫内温度上昇を防いで衛生的に保冷保管へ移行できます。
             </p>
           </div>

@@ -202,7 +202,7 @@ export default function App() {
       <main className="flex-1 max-w-7xl w-full mx-auto p-2 sm:p-3 space-y-2.5">
         {/* === コストモード時 (A4縦・最適化レイアウト) === */}
         {viewMode === 'summary' && (
-          <div className="space-y-2.5 print:space-y-2.5 page-break-inside-avoid">
+          <div className="space-y-2.5 page-break-inside-avoid">
             {/* 上段: 提案書ヘッダー・月次コスト削減・3方式スピード対比 */}
             <SalesSummaryMode
               activeResult={activeResult}
@@ -210,23 +210,23 @@ export default function App() {
             />
 
             {/* 中下段: 3方式比較グラフ（左側 約2/3・8/12） ＋ メカニズム＆お問い合わせ窓口（右側 約1/3・4/12） */}
-            <div className="w-full grid grid-cols-1 md:grid-cols-12 gap-2.5 items-stretch page-break-inside-avoid print:grid-cols-12 print:gap-2">
+            <div className="w-full grid grid-cols-1 md:grid-cols-12 gap-2.5 items-stretch page-break-inside-avoid">
               {/* 左側 (約2/3・8/12): 3方式冷却スピード比較グラフ */}
-              <div className="w-full md:col-span-8 flex flex-col bg-white rounded-xl border border-slate-200 shadow-xs overflow-hidden print:col-span-8 print:rounded-lg print:border-slate-300 print:overflow-visible">
-                <div className="bg-slate-50 px-3 py-1.5 border-b border-slate-200 flex items-center justify-between print:px-2.5 print:py-1">
+              <div className="w-full md:col-span-8 flex flex-col bg-white rounded-xl border border-slate-200 shadow-xs overflow-hidden">
+                <div className="bg-slate-50 px-3 py-1.5 border-b border-slate-200 flex items-center justify-between">
                   <div className="flex items-center space-x-1.5">
                     <span className="w-2 h-2 rounded-full bg-cyan-600"></span>
-                    <span className="text-sm font-bold text-slate-900 print:text-[11.5px]">
-                      3方式冷却スピード比較グラフ（120分）
+                    <span className="font-black text-base sm:text-lg text-slate-900">
+                      3方式比較
                     </span>
                   </div>
-                  <div className="text-right text-[10px] text-slate-500 font-sans print:text-[8px] leading-tight">
+                  <div className="text-right text-[10px] text-slate-500 font-sans leading-tight">
                     <span>※水物性モデル準拠（実スープは粘性・Brixで延伸 / </span>
                     <span className="font-bold text-cyan-800">Brix対応モデル開発中</span>
                     <span>）</span>
                   </div>
                 </div>
-                <div className="p-2 sm:p-2.5 flex-1 flex flex-col justify-center print:p-1.5">
+                <div className="p-2 sm:p-2.5 flex-1 flex flex-col justify-center">
                   <ChartsSection
                     activeResult={activeResult}
                     savedResults={savedCases}
@@ -240,7 +240,7 @@ export default function App() {
               </div>
 
               {/* 右側 (約1/3・4/12): メカニズム（上段）＋ お問い合わせ・製品窓口（下段） */}
-              <div className="w-full md:col-span-4 flex flex-col print:col-span-4">
+              <div className="w-full md:col-span-4 flex flex-col">
                 <ContactInfoCard />
               </div>
             </div>
