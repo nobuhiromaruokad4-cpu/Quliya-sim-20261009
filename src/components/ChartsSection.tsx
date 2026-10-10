@@ -1063,8 +1063,8 @@ export const ChartsSection: React.FC<ChartsSectionProps> = ({
       <div
         className={`p-2 sm:p-2.5 relative flex-1 ${
           compact
-            ? 'min-h-[350px] h-[390px] print:min-h-[260px] print:h-[260px] print:max-h-[260px] print:p-1'
-            : 'min-h-[460px] h-full flex-1'
+          ? 'min-h-[350px] h-[390px] print:min-h-[320px] print:h-[320px] print:p-1'
+          : 'min-h-[460px] h-full flex-1'
         }`}
       >
         {activeTab === 'cooling' && (

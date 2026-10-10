@@ -45,8 +45,7 @@
   canvas {
     max-width: 100% !important;
     width: 100% !important;
-    height: auto !important;
-    object-fit: contain !important;
+    height: 100% !important;
   }
 
   /* 印刷時の適度な余白設定 (改ページ溢れを防止しつつ用紙全体をバランス良く配置) */
