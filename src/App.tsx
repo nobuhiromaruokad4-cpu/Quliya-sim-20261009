@@ -1,4 +1,5 @@
 import React, { useState, useTransition } from 'react';
+import { Analytics } from '@vercel/analytics/react';
 import { SimulationParams, SimulationResult } from './types/simulation';
 import { runSimulation, run3ModesSimulation, PRESETS } from './lib/physics';
 import { Header } from './components/Header';
@@ -302,6 +303,7 @@ export default function App() {
           Developed by N.Maruoka, IMRAM, Tohoku University
         </p>
       </footer>
+      <Analytics />
     </div>
   );
 }
